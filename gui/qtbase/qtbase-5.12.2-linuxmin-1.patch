@@ -1,0 +1,27 @@
+diff -Naur a/src/corelib/global/minimum-linux_p.h b/src/corelib/global/minimum-linux_p.h
+--- a/src/corelib/global/minimum-linux_p.h	2019-03-06 08:59:50.000000000 +0100
++++ b/src/corelib/global/minimum-linux_p.h	2019-04-12 11:35:09.673477203 +0200
+@@ -78,23 +78,9 @@
+  * - statx                      4.11                    QT_CONFIG(statx)
+  */
+ 
+-#if QT_CONFIG(statx)
+-#  define MINLINUX_MAJOR        4
+-#  define MINLINUX_MINOR        11
+-#  define MINLINUX_PATCH        0
+-#elif QT_CONFIG(getentropy)
+-#  define MINLINUX_MAJOR        3
+-#  define MINLINUX_MINOR        17
+-#  define MINLINUX_PATCH        0
+-#elif QT_CONFIG(renameat2)
+-#  define MINLINUX_MAJOR        3
+-#  define MINLINUX_MINOR        16
+-#  define MINLINUX_PATCH        0
+-#else
+ #  define MINLINUX_MAJOR        2
+ #  define MINLINUX_MINOR        6
+ #  define MINLINUX_PATCH        28
+-#endif
+ 
+ #define MINIMUM_LINUX_VERSION  QT_VERSION_CHECK(MINLINUX_MAJOR, MINLINUX_MINOR, MINLINUX_PATCH)
+ 
