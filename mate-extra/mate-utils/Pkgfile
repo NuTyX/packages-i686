@@ -14,6 +14,7 @@ build() {
 
   unset MAKEFLAGS
   cd $name-$version
+  rm -r gsearchtool/help/pt
   ./configure \
           --prefix=/usr \
           --libexecdir=/usr/lib/${name} \
