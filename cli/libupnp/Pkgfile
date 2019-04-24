@@ -1,10 +1,14 @@
 description="An Portable Open Source UPnP Development Kit."
 url="http://pupnp.sourceforge.net/"
-contributors="Fanch, Greg"
-packager="tnut <tnut@nutyx.org>"
+contributors="fanch at nutyx dot org"
+packager="greg<greg@nutyx.org>"
 
 name=libupnp
-version=1.8.4
+version=1.6.25
 
 source=(http://downloads.sourceforge.net/sourceforge/pupnp//$name-$version.tar.bz2)
 
+package() {
+# Obsolets libs
+rm $PKG/usr/lib/lib{ixml,threadutil,upnp}.la
+}
