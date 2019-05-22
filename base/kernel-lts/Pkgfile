@@ -12,7 +12,7 @@ PKGMK_GROUPS=(devel doc)
 name=kernel-lts
 alias=(linux-lts)
 
-version=4.9.177
+version=4.9.178
 _version=${version:0:3}
 
 ## Download all the sources
