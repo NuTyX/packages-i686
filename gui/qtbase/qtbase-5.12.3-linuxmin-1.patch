@@ -1,11 +1,14 @@
-diff -Naur a/src/corelib/global/minimum-linux_p.h b/src/corelib/global/minimum-linux_p.h
---- a/src/corelib/global/minimum-linux_p.h	2019-03-06 08:59:50.000000000 +0100
-+++ b/src/corelib/global/minimum-linux_p.h	2019-04-12 11:35:09.673477203 +0200
-@@ -78,23 +78,9 @@
+--- a/src/corelib/global/minimum-linux_p.h	2019-04-09 11:51:26.000000000 +0200
++++ b/src/corelib/global/minimum-linux_p.h	2019-05-22 21:58:35.957666329 +0200
+@@ -78,27 +78,9 @@
   * - statx                      4.11                    QT_CONFIG(statx)
   */
  
--#if QT_CONFIG(statx)
+-#if QT_CONFIG(statx) && !QT_CONFIG(glibc)
+-// if using glibc, the statx() function in sysdeps/unix/sysv/linux/statx.c
+-// falls back to stat() for us.
+-// (Using QT_CONFIG(glibc) instead of __GLIBC__ because the macros aren't
+-// defined in assembler mode)
 -#  define MINLINUX_MAJOR        4
 -#  define MINLINUX_MINOR        11
 -#  define MINLINUX_PATCH        0

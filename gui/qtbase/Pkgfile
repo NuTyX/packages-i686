@@ -6,11 +6,12 @@ packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
 
 name=qtbase
-version=5.12.2
+version=5.12.3
 
+run=(atk cairo cups dbus eudev freetype gcc gdk-pixbuf glib glibc gtk3 harfbuzz icu libjpeg-turbo2 libpng libxcb libxkbcommon mariadb.lib mesa mtdev openssl pango postgresql.lib sqlite unixodbc xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm xorg-fontconfig xorg-libdrm xorg-libice xorg-libsm xorg-libx11 xorg-libxext xorg-libxrender zlib)
 _name="${name}-everywhere-src"
 
-source=(qtbase-5.12.2-linuxmin-1.patch
+source=(qtbase-$version-linuxmin-1.patch
 	https://download.qt.io/official_releases/qt/${version:0:4}/$version/submodules/${_name}-${version}.tar.xz)
 
 
@@ -21,7 +22,7 @@ QT5BINDIR=$QT5PREFIX/bin/qt
 
 cd ${_name}-${version}
 
-patch -Np1 -i ../qtbase-5.12.2-linuxmin-1.patch
+patch -Np1 -i ../qtbase-$version-linuxmin-1.patch
 
 ./configure -prefix         /usr                        \
             -sysconfdir     /etc/xdg                    \
