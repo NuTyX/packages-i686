@@ -7,7 +7,7 @@ contributors="Pierre B"
 
 name=qtbase
 version=5.12.3
-
+release=2
 run=(atk cairo cups dbus eudev freetype gcc gdk-pixbuf glib glibc gtk3 harfbuzz icu libjpeg-turbo2 libpng libxcb libxkbcommon mariadb.lib mesa mtdev openssl pango postgresql.lib sqlite unixodbc xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm xorg-fontconfig xorg-libdrm xorg-libice xorg-libsm xorg-libx11 xorg-libxext xorg-libxrender zlib)
 _name="${name}-everywhere-src"
 
