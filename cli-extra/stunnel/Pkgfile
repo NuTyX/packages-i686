@@ -9,7 +9,7 @@ version=5.50
 
 nutyx_version=11.0
 
-source=(http://downloads.tuxfamily.org/nutyx/files/nutyx-${nutyx_version}.tar.xz
+source=(http://downloads.nutyx.org/files/nutyx-${nutyx_version}.tar.xz
 	ftp://ftp.stunnel.org/stunnel/archive/5.x/$name-$version.tar.gz
 	stunnel.conf)
 
