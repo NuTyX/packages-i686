@@ -1,5 +1,3 @@
-# Depends on: nutyx
-
 url="http://www.kernel.org"
 description="The long term stable kernel version 4.9.XX"
 packager="tnut <tnut@nutyx.org>"
@@ -12,8 +10,9 @@ PKGMK_GROUPS=(devel doc)
 name=kernel-lts
 alias=(linux-lts)
 
-version=4.9.184
+version=4.9.185
 _version=${version:0:3}
+makedepends=(nutyx)
 
 ## Download all the sources
 #
