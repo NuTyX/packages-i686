@@ -1,9 +1,10 @@
-# Depends on: libxml2 docbook-xml
-
 description="XML stylesheets for Docbook-xml transformations"
 url="http://scrollkeeper.sourceforge.net/docbook.shtml"
+
 packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
+
+makedepends=(libxml2 docbook-xml)
 
 name=docbook-xsl
 version=1.79.2
