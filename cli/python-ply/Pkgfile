@@ -1,11 +1,14 @@
-# Depends on: python python2
-
 description="Implementation of lex and yacc parsing tools"
 url="http://www.dabeaz.com/ply/"
-packager="rems <rems@nutyx.org>"
+
+packager="tnut <tnut@nutyx.org>"
+contributors="Remy"
+
+makedepends=(python python2)
 
 name=python-ply
 version=3.11
+release=2
 
 source=(${url}ply-$version.tar.gz)
 
