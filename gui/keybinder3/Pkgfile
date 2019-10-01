@@ -1,21 +1,22 @@
-packager="Sipo at nutyx dot org"
 description="A library for registering global keyboard shortcuts"
 url="https://github.com/engla/keybinder/tree/keybinder-3.0"
 
-# Depends on: gtk3 
+packager="tnut <tnut@nutyx.org>"
+contributors="Sipo"
+
+makedepends=(gtk3 gtk-doc gobject-introspection)
 
 name=keybinder3
 alias=(libkeybinder3)
 version=0.3.2
-release=3
-
+release=4
 
 source=(https://github.com/kupferlauncher/keybinder/releases/download/keybinder-3.0-v$version/keybinder-3.0-$version.tar.gz)
 
 build() {
 
   cd keybinder-3.0-$version
-  ./configure --prefix=/usr --enable-gtk-doc
+  ./configure --prefix=/usr
   make
   
   make DESTDIR=$PKG install
