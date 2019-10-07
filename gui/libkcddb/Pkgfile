@@ -1,0 +1,27 @@
+description="Used to retrieve audio CD meta data from the interne"
+url="http://sourceforge.net/projects/libkcddb/"
+packager="tnut <tnut@nutyx.org>"
+contributors="Pierre B"
+
+set=(kde5 plasma5)
+
+name=libkcddb
+version=19.08.1
+makedepends=(python extra-cmake-modules kconfig kdoctools
+             kcodecs ki18n kio kwidgetsaddons kxmlgui)
+source=(https://download.kde.org/stable/applications/$version/src/$name-$version.tar.xz)
+
+build=kde5
+
+uptodate() {
+feed=https://github.com/KDE/$name/releases.atom 
+exec="lynx -read_timeout=20 -dump -listonly -nonumbers $feed"
+ligne=1 # nombre de notification ? afficher
+$exec $feed | grep title | \
+sed "s@<title>@@" | \
+sed "s@</title>@@" | \
+sed "s@v@@" | \
+head -n $(($ligne+1 )) | \
+tail -n $(($ligne))
+}
+
