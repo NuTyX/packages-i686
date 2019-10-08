@@ -1,13 +1,17 @@
-# Depends on: xscreensaver
-
 description="Enable screensavers from xscreensaver for MATE"
 url="http://www.jwz.org/xscreensaver/"
-packager="greg <greg@nutyx.org>"
-contributors="fanch"
+
+packager="tnut <tnut@nutyx.org>"
+contributors="Fanch, Greg"
+
+set=(mate)
 
 name=mate-screensaver-hacks
 version=5.26
-release=1
+release=3
+
+makedepends=(xscreensaver)
+run=(xscreensaver)
 
 source=(migrate-xscreensaver-config.sh
         xscreensaver-config.xsl LICENSE)
@@ -23,5 +27,8 @@ build() {
 }
 
 uptodate() {
-echo " Uptodate non applicable à cette recette."
+feed=https://github.com/mate-desktop/$name/releases.atom
+exec="lynx -read_timeout=20 -dump -listonly -nonumbers $feed"
+$exec $feed | grep release | grep title | head -1 | \
+sed -e "s@ @@g" -e "s@<title>$name@@" -e "s@release</title>@@"
 }
