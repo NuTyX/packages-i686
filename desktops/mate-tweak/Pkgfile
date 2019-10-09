@@ -1,15 +1,20 @@
-#Depends on: tilda gtk3 libnotify python-configobj python-gobject python-psutil python-setproctitle python-distutils-extra mate-menus mate-netbook
-
 description="Tweak tool for MATE (fork of MintDesktop)"
 url="https://github.com/ubuntu-mate/mate-tweak"
 packager="Dania <Dania@nutyx.org>"
 contributors=""
 
+set=(mate-extra)
+
 name=mate-tweak
 version=18.10.2
 _umsver=18.04.17
+release=2
 
-run=(python-psutil python-setproctitle)
+makedepends=(tilda gtk3 libnotify python-configobj python-gobject
+             python-psutil python-setproctitle python-distutils-extra
+             mate-menus mate-netbook)
+
+run=(python-gobject python-psutil python-setproctitle)
 
 source=(https://github.com/ubuntu-mate/$name/archive/$version.tar.gz
         https://github.com/ubuntu-mate/ubuntu-mate-settings/archive/$_umsver.tar.gz)
@@ -22,4 +27,10 @@ build() {
   python3 setup.py install --root=$PKG --optimize=1 --skip-build
 
   cp -r $SRC/ubuntu-mate-settings-$_umsver/usr/share/mate-panel $PKG/usr/share
+}
+uptodate() {
+feed=https://github.com/mate-desktop/$name/releases.atom
+exec="lynx -read_timeout=20 -dump -listonly -nonumbers $feed"
+$exec $feed | grep release | grep title | head -1 | \
+sed -e "s@ @@g" -e "s@<title>$name@@" -e "s@release</title>@@"
 }
