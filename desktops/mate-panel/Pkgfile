@@ -1,13 +1,17 @@
-# Depends on: caja gobject-introspection gtk3 libcanberra xorg-libice librsvg libsoup xorg-libsm xorg-libxau libwnck marco mate-desktop mate-libweather mate-menus mate-session-manager libwnck
-
 description="MATE panel"
 url="https://mate-desktop.org/"
+
 packager="tnut <tnut@nutyx.org>"
 contributors="Fanch, Tnut, Jayce, Greg, Remy"
 
-name=mate-panel
-version=1.22.1
+makedepends=(caja gobject-introspection gtk3 libcanberra xorg-libice
+             librsvg libsoup xorg-libsm xorg-libxau libwnck marco
+             mate-desktop mate-libweather mate-menus mate-session-manager
+             libwnck)
+set=(mate)
 
+name=mate-panel
+version=1.22.2
 
 source=(http://pub.mate-desktop.org/releases/${version%.*}/$name-$version.tar.xz)
 
@@ -29,13 +33,8 @@ build() {
 }
 
 uptodate() {
-feed=https://github.com/mate-desktop/$name/releases.atom 
+feed=https://github.com/mate-desktop/$name/releases.atom
 exec="lynx -read_timeout=20 -dump -listonly -nonumbers $feed"
-ligne=1 # nombre de notification ? afficher
-$exec $feed | grep title | \
-sed "s@<title>@@" | \
-sed "s@</title>@@" | \
-sed "s@v@@" | sed "s@ @@g" | \
-head -n $(($ligne+1 )) | \
-tail -n $(($ligne))
+$exec $feed | grep release | grep title | head -1 | \
+sed -e "s@ @@g" -e "s@<title>$name@@" -e "s@release</title>@@"
 }
