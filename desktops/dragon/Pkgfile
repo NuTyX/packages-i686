@@ -1,13 +1,14 @@
-# Depends on: extra-cmake-modules kparts knotifications kdoctools python hicolor-icon-theme
-
 description="A multimedia player where the focus is on simplicity"
 url="https://www.kde.org/"
 packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
 
-name=dragon
-version=19.04.3
+set=(kde5 plasma5)
 
+name=dragon
+version=19.08.1
+makedepends=(extra-cmake-modules kparts knotifications
+             kdoctools python hicolor-icon-theme)
 source=(http://download.kde.org/stable/applications/$version/src/$name-$version.tar.xz)
 
 build() {
