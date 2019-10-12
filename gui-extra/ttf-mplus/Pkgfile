@@ -1,23 +1,19 @@
-packager="Greg"
-
-# Depends on: xorg-fontconfig 
-
-
 description="M+ Japanese outline fonts"
 url="http://mplus-fonts.osdn.jp/mplus-outline-fonts/index-en.html"
 
-run=()
+packager="tnut <tnut@nutyx.org>"
+contributors="Greg"
+
+makedepends=(xorg-fontconfig xorg-mkfontscale)
+run=(xorg-mkfontscale)
 
 name=ttf-mplus
-version=TESTFLIGHT_063
-_version=${version/_/-}
+version=TESTFLIGHT-063
 
-release=1
-
-source=(http://jaist.dl.osdn.jp/mplus-fonts/62344/mplus-$_version.tar.xz)
+source=(http://jaist.dl.osdn.jp/mplus-fonts/62344/mplus-${version}.tar.xz)
 
 build(){
-  cd ${SRC}/mplus-${_version}
+  cd ${SRC}/mplus-${version}
 
   install -d ${PKG}/usr/share/fonts/TTF
   install -m644 *.ttf ${PKG}/usr/share/fonts/TTF/
