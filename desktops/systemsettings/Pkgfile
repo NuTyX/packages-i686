@@ -1,13 +1,13 @@
-# Depends on: kactivities-stats plasma-workspace khtml kdoctools
-
-name=systemsettings
 description="KDE system settings "
 url="https://www.kde.org/"
 packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
 
-version=5.16.3
+set=(kde5 plasma5)
 
+name=systemsettings
+version=5.16.5
+makedepends=(kactivities-stats plasma-workspace khtml kdoctools)
 source=(https://download.kde.org/stable/plasma/${version:0:6}/$name-$version.tar.xz)
 
 build=kde5
