@@ -1,13 +1,13 @@
-# Depends on: bluedevil
-
 description="KHotKeys "
 url="https://www.kde.org/"
 packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
 
-name=khotkeys
-version=5.16.3
+set=(kde5 plasma5)
 
+name=khotkeys
+version=5.16.5
+makedepends=(bluedevil)
 source=(https://download.kde.org/stable/plasma/$version/$name-$version.tar.xz)
 
 
