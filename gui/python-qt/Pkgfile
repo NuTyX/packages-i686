@@ -6,7 +6,8 @@ contributors="Pierre B"
 name=python-qt
 version=5.13.0
 makedepends=(sip dbus-python qtbase qtconnectivity qtmultimedia qttools
-             qtserialport qtsvg qtx11extras qtnetworkauth qtwebsockets)
+             qtserialport qtsvg qtx11extras qtnetworkauth
+             qtwebengine qtwebsockets)
 
 source=(https://www.riverbankcomputing.com/static/Downloads/PyQt5/$version/PyQt5_gpl-$version.tar.gz)
 build() {
