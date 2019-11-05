@@ -10,8 +10,7 @@ PKGMK_GROUPS=(devel man doc)
 _pybasever=2.7
 
 name=python2
-version=2.7.16
-release=2
+version=2.7.17
 
 source=(
 ${url}/ftp/python/$version/Python-$version.tar.xz
@@ -20,10 +19,10 @@ $name.png)
 
 build() {
     cd Python-$version
-    ./configure --prefix=/usr \
-                --with-system-expat \
-                --with-system-ffi \
-                --enable-shared \
+    ./configure --prefix=/usr        \
+                --with-system-expat  \
+                --with-system-ffi    \
+                --enable-shared      \
                 --enable-unicode=ucs4
     make
     make DESTDIR=$PKG install
