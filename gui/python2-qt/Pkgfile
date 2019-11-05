@@ -5,10 +5,10 @@ contributors="Pierre B"
 
 name=python2-qt
 version=5.13.0
-makedepends=(python2-enum34 dbus-python sip qtbase
+makedepends=(python2-enum34 dbus-python sip qtbase 
              qtmultimedia qttools qtconnectivity
              qtserialport qtsvg qtx11extras qtnetworkauth
-             qtwebsockets qtxmlpatterns)
+             qtwebengine qtwebsockets qtxmlpatterns)
 run=(python2 python2-enum34)
 
 source=(https://www.riverbankcomputing.com/static/Downloads/PyQt5/$version/PyQt5_gpl-$version.tar.gz)
