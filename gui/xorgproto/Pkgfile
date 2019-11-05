@@ -9,8 +9,7 @@ makedepends=(meson ninja )
 PKGMK_GROUPS=(doc man)
 
 name=xorgproto
-version=2019.1
-release=2
+version=2019.2
 
 _name=$name
 
@@ -18,11 +17,6 @@ PKGMK_GROUPS=(doc man)
 source=(http://ftp.x.org/pub/individual/proto/$name-$version.tar.bz2)
 
 build=meson
-
-package() {
-# In xorg-libx11
-rm $PKG/usr/include/X11/extensions/XKBgeom.h
-}
 
 uptodate() {
 local ext urlLINX
