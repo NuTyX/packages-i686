@@ -2,18 +2,25 @@ description="A text editor for GNOME"
 url="http://www.gnome.org/"
 
 packager="tnut <tnut@nutyx.org>"
-contributors="Tnut, Jayce, Fanch"
+contributors="Jayce, Fanch"
 
-makedepends=(gedit gsettings-desktop-schemas desktop-file-utils gtk-update-icon-cache)
+makedepends=(gedit)
 run=(gsettings-desktop-schemas desktop-file-utils gtk-update-icon-cache)
 
-name=gedit-plugins
-version=3.32.2
+set=(gnome)
 
-source=(http://ftp.gnome.org/pub/gnome/sources/$name/${version%.*}/$name-$version.tar.xz)
+name=gedit-plugins
+version=3.34.0
+
+source=(https://ftp.gnome.org/pub/gnome/sources/$name/${version%.*}/$name-$version.tar.xz)
+
 build() {
+
 cd $name-$version
-./configure --prefix=/usr --sysconfdir=/etc --disable-schemas-compile 
-make
-make DESTDIR=$PKG  install
+    mkdir build
+    cd    build
+    meson --prefix=/usr \
+    -D plugin_zeitgeist=false
+    ninja
+    DESTDIR=$PKG ninja install
 }
