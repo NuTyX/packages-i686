@@ -1,14 +1,16 @@
 description="An image scanning library "
 url="https://www.kde.org/"
+
 packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
-set=(kde5 plasma5)
 
-name=libksane
-version=19.08.2
+set=(kde5 plasma5)
 makedepends=(sane extra-cmake-modules qtbase ki18n kwallet ktextwidgets)
 
-source=(http://download.kde.org/stable/applications/$version/src/$name-$version.tar.xz)
+name=libksane
+version=19.08.3
+
+source=(https://download.kde.org/stable/applications/$version/src/$name-$version.tar.xz)
 
 build=kde5
 
