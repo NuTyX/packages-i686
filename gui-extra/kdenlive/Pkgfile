@@ -4,17 +4,15 @@ packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
 
 makedepends=(frei0r-plugins qtquickcontrols qtmultimedia
-             frei0r-plugins knotifications knewstuff kplotting knotifyconfig
+             knotifications knewstuff kplotting knotifyconfig
              kded kfilemetadata kdeclarative mlt xorg-glu sdl-image
              kdoctools v4l-utils ffmpeg cdrtools libdv)
 run=(shared-mime-info frei0r-plugins hicolor-icon-theme)
 
-set=(kde5 plasma5)
-
 name=kdenlive
-version=19.08.3
+version=19.12.0
 
-source=(https://download.kde.org/stable/applications/$version/src/$name-$version.tar.xz)
+source=(https://download.kde.org/stable/release-service/$version/src/$name-$version.tar.xz)
 
 build=kde5
 
