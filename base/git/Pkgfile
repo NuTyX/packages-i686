@@ -10,7 +10,7 @@ run=(openssh)
 name=git
 version=2.24.1
 
-source=( https://www.kernel.org/pub/software/scm/$name/$name{,-manpages,-htmldocs}-$version.tar.xz)
+source=(https://www.kernel.org/pub/software/scm/$name/$name{,-manpages,-htmldocs}-$version.tar.xz)
 
 build() {
 cd $name-$version
