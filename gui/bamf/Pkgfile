@@ -1,0 +1,33 @@
+description="Application matching framework"
+url="https://launchpad.net/bamf"
+
+packager="tnut <tnut@nutyx.org>"
+
+makedepends=(gnome-common gobject-introspection python2-lxml vala)
+run=(libgtop libwnck)
+
+name=bamf
+version=0.5.4
+
+source=(https://launchpad.net/bamf/${version%.*}/$version/+download/$name-$version.tar.gz)
+
+build() {
+cd $name-$version
+
+export PYTHON='/usr/bin/python2'
+
+sed -i "s@-Werror @@" configure.ac
+
+ ./autogen.sh --prefix=/usr --libexecdir=/usr/lib \
+ --localstatedir=/var --sysconfdir=/etc \
+ --disable-static
+
+sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+
+make
+
+ make DESTDIR=$PKG install
+
+ # Obsolet lib
+ rm $PKG/usr/lib/libbamf3.la
+}
