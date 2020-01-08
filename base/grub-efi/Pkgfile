@@ -3,18 +3,30 @@ url="http://www.gnu.org/software/grub/"
 
 packager="tnut <tnut@nutyx.org>"
 
-makedepends=(efibootmgr efivar freetype python)
+makedepends=(efibootmgr efivar freetype)
 run=(efivar)
 
 name=grub-efi
 version=2.04
+release=2
 
-source=(https://ftp.gnu.org/gnu/grub/grub-$version.tar.xz
+pyversion=3.8.1
+
+source=(https://www.python.org/ftp/python/$pyversion/Python-$pyversion.tar.xz
+        https://ftp.gnu.org/gnu/grub/grub-$version.tar.xz
         http://downloads.tuxfamily.org/nutyx/files/unicode.pf2)
 
 PKGMK_GROUPS=(man locale)
+prepare() {
 
+   cd Python-$pyversion
+   rm -r Doc
+   ./configure --prefix=$SRC/tools --with-ensurepip=no
+   make
+   make libinstall bininstall
+}
 build() {
+ export PATH=$SRC/tools/bin:$PATH
  cd grub-$version
 
  ./configure --prefix=/usr --sysconfdir=/etc \
