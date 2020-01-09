@@ -7,8 +7,7 @@ makedepends=(libtirpc rpcbind rpcsvc-proto)
 run=(rpcbind)
 
 name=nfs-utils
-version=2.4.1
-release=2
+version=2.4.2
 
 nutyx_version=11.3
 
