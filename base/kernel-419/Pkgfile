@@ -1,0 +1,142 @@
+url="http://www.kernel.org"
+description="The LTS 4.19 stable kernel"
+
+packager="tnut <tnut@nutyx.org>"
+contributors="Pierre B"
+
+run=(nutyx)
+
+name=kernel-419
+alias=(linux-419)
+
+version=4.19.97
+_version=${version:0:4}
+
+PKGMK_IGNORE_UNPACK="yes"
+PKGMK_NO_STRIP="yes"
+PKGMK_GROUPS=(devel doc)
+
+## Download all the sources
+#
+source=(\
+$url/pub/linux/kernel/v4.x/linux-${_version}.tar.xz
+$url/pub/linux/kernel/v4.x/patch-$version.xz
+config)
+
+## Time to build everything
+#
+build(){
+
+bsdtar -p -o -C $SRC -xf linux-${_version}.tar.xz
+
+cd linux-${_version}
+
+if [ -f $SRC/patch-$version.xz ]; then
+	xz -d -c  $SRC/patch-$version.xz | patch -Np1
+fi
+
+make mrproper
+cp $SRC/config ./.config
+
+# make menuconfig
+
+make
+
+cp .config $SRC/config
+
+## Modules
+#
+# Kernel modules
+cd $SRC/linux-${_version}
+make INSTALL_MOD_PATH=$PKG modules_install
+
+KERNEL_VERSION="${version}-NuTyX-419"
+
+cd $SRC
+
+# depmod needed
+depmod -b $PKG -a ${KERNEL_VERSION}
+
+# Install config and kernel files
+cd $SRC/linux-${_version}
+
+mkdir -p $PKG/boot
+
+cp  System.map \
+$PKG/boot/System.map-$version-NuTyX-419
+cp  .config    \
+$PKG/boot/config-$version-NuTyX-419
+cp  arch/i386/boot/bzImage \
+$PKG/boot/kernel-$version-NuTyX-419
+
+# Reorgenise the sources
+cd $PKG/lib/modules/${KERNEL_VERSION}/
+
+mkdir -p $PKG/usr/src
+
+mv $SRC/linux-${_version} $PKG/usr/src/
+rm {build,source}
+
+ln -sv ../../../usr/src/linux-${_version} build
+ln -sv ../../../usr/src/linux-${_version} source
+
+mkdir $SRC/linux-${_version}
+mv $PKG/usr/src/linux-${_version}/Documentation \
+$SRC/linux-${_version}
+
+# Firmware are in linux-firmware
+rm -rf $PKG/lib/firmware
+
+# post-install autogen
+echo 'LK="."
+[ -L boot/kernel-419 ] && LK="`readlink boot/kernel-419`"
+if [ "`dirname $LK`" != "." ]; then
+  echo "This is a efi installation"
+  ln -sf $LK boot/kernel-419
+  if [ -f boot/$LK ]; then' > $PKGMK_ROOT/$name.post-install
+echo "    mv boot/kernel-$version-NuTyX-419 boot/\$LK 2>/dev/null
+    ln -sf \$LK boot/kernel-$version-NuTyX-419
+  else
+    echo \"EFI Partition not found, mount EFI Partition and re-install the kernel\"
+  fi
+else
+  echo \"This is a bios installation\"
+  if [ -L boot/initrd-419 ]; then
+    mkinitramfs $version-NuTyX-419
+    ln -sf initrd-$version-NuTyX-419 boot/initrd-419
+  fi
+  ln -sf kernel-$version-NuTyX-419 boot/kernel-419
+fi" >> $PKGMK_ROOT/$name.post-install
+
+}
+devel() {
+
+cd $PKG
+rm -r usr/src/linux-${_version}/{tools,ipc,init,drivers,firmware,fs,mm,samples,security,sound,virt}
+for i in alpha arc arm arm26 arm64 avr32 blackfin c6x \
+cris frv h8300 hexagon ia64 m32r m68k m68knommu metag \
+mips microblaze mn10300 openrisc parisc powerpc ppc s390 \
+score sh sh64 sparc sparc64 tile unicore32 um v850 xtensa
+do rm -rf usr/src/linux-${_version}/arch/$i
+done
+
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/$name.devel${PKGMK_BUILDVER}any.${PKGMK_PACKAGE_EXT} \
+usr/src/linux-${_version}
+
+rm -r usr
+}
+
+doc() {
+
+cd $PKG
+mkdir -p usr/share/doc
+mv $SRC/linux-${_version}/Documentation \
+usr/share/doc/linux-$version
+
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/$name.doc${PKGMK_BUILDVER}any.${PKGMK_PACKAGE_EXT} \
+usr/share/doc/linux-$version
+
+rm -r usr
+}
