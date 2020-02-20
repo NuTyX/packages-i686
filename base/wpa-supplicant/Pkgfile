@@ -8,7 +8,7 @@ makedepends=(libnl)
 name=wpa-supplicant
 version=2.9
 
-source=(http://w1.fi/releases/wpa_supplicant-$version.tar.gz)
+source=(https://w1.fi/releases/wpa_supplicant-$version.tar.gz)
 
 build() {
 
