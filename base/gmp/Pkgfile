@@ -5,9 +5,10 @@ contributors="Pierre B"
 packager="tnut <tnut@nutyx.org>"
 
 name=gmp
-version=6.1.2
-release=3
+version=6.2.0
+release=2
 
+PKGMK_KEEP_LA_LIBS="yes"
 source=(http://ftp.gnu.org/gnu/$name/$name-$version.tar.xz)
 
 build()
