@@ -1,5 +1,5 @@
 url="http://www.kernel.org"
-description="The LTS 4.19 stable kernel"
+description="The 4.19 longterm support Linux Kernel version."
 
 packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
@@ -7,9 +7,9 @@ contributors="Pierre B"
 run=(nutyx)
 
 name=kernel-419
-alias=(linux-419)
+alias=(linux-4.19)
 
-version=4.19.104
+version=4.19.108
 _version=${version:0:4}
 
 PKGMK_IGNORE_UNPACK="yes"
@@ -89,10 +89,10 @@ rm -rf $PKG/lib/firmware
 
 # post-install autogen
 echo 'LK="."
-[ -L boot/kernel-419 ] && LK="`readlink boot/kernel-419`"
-if [ "`dirname $LK`" != "." ]; then
+[ -L boot/$name ] && LK="$(readlink boot/$name)"
+if [ "$(dirname $LK)" != "." ]; then
   echo "This is a efi installation"
-  ln -sf $LK boot/kernel-419
+  ln -sf $LK boot/$name
   if [ -f boot/$LK ]; then' > $PKGMK_ROOT/$name.post-install
 echo "    mv boot/kernel-$version-NuTyX-419 boot/\$LK 2>/dev/null
     ln -sf \$LK boot/kernel-$version-NuTyX-419
@@ -105,7 +105,7 @@ else
     mkinitramfs $version-NuTyX-419
     ln -sf initrd-$version-NuTyX-419 boot/initrd-419
   fi
-  ln -sf kernel-$version-NuTyX-419 boot/kernel-419
+  ln -sf kernel-$version-NuTyX-419 boot/$name
 fi" >> $PKGMK_ROOT/$name.post-install
 
 }
