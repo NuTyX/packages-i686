@@ -9,7 +9,7 @@ packager="tnut <tnut@nutyx.org>"
 
 name=runit
 version=2.1.2
-release=2
+release=3
 
 libc_name=dietlibc
 libc_version=0.34
@@ -33,6 +33,7 @@ cd $name-$version
 
 echo 'diet -Os gcc -O2 -Wall' >src/conf-cc
 echo 'diet -Os gcc -s -Os -pipe' >src/conf-ld
+
 package/compile
 package/check
 
@@ -60,7 +61,7 @@ main()
 EOF
 cc src/pause.c -o command/pause
 
-mkdir -p $PKG/{sbin,lib/runit/sv}
+mkdir -p $PKG/{sbin,lib/init/services}
 
 # Let see this later :)
 # install -m755 command/runit-init \
@@ -138,8 +139,8 @@ PATH=/command:/usr/bin:/bin:/usr/sbin:/sbin
 LAST=0
 test -x /lib/init/reboot && LAST=6
 echo 'Waiting for services to stop ...'
-sv -w196 force-stop /lib/runit/default/*
-sv exit /lib/init/default/*
+sv -w196 force-stop /lib/init/services/*
+sv exit /lib/init/services/*
 
 echo "Shutdown..."
 # /etc/init.d/rc $LAST
