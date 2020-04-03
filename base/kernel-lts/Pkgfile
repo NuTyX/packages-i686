@@ -9,9 +9,9 @@ PKGMK_NO_STRIP="yes"
 PKGMK_GROUPS=(devel doc)
 
 name=kernel-lts
-alias=(linux-lts)
+alias=(linux-4.9)
 
-version=4.9.217
+version=4.9.218
 _version=${version:0:3}
 
 run=(nutyx)
