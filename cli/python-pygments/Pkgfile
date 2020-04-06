@@ -6,7 +6,8 @@ packager="tnut <tnut@nutyx.org>"
 makedepends=(python)
 
 name=python-pygments
-version=2.4.2
+version=2.5.2
+release=3
 
 source=(https://pypi.org/packages/source/P/Pygments/Pygments-${version}.tar.gz)
 
