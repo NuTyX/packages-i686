@@ -8,7 +8,9 @@ makedepends=(python2 python)
 
 name=libxml2
 version=2.9.10
+release=2
 
+PKGMK_GROUPS=(lib man devel doc)
 source=(ftp://xmlsoft.org/libxml2/$name-$version.tar.gz)
 
 
@@ -34,12 +36,43 @@ build() {
 _build 2
 _build 3
 }
+
 package() {
 
 make -C build-py2  DESTDIR=$PKG install
 make -C build-py3/python  DESTDIR=$PKG install
 
 rm $PKG/usr/lib/$name.la
-rm $PKG/usr/lib/python3.7/site-packages/libxml2mod.la
+rm $PKG/usr/lib/python3.8/site-packages/libxml2mod.la
 rm $PKG/usr/lib/python2.7/site-packages/libxml2mod.la
+}
+
+lib() {
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/$name.lib${PKGMK_BUILDVER}${PKGMK_ARCH}.cards.tar \
+usr/lib/libxml2*
+
+rm usr/lib/libxml2*
+rm -d usr/lib
+}
+
+devel() {
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/$name.devel${PKGMK_BUILDVER}any.cards.tar \
+usr/lib/cmake usr/lib/pkgconfig usr/lib/python* usr/lib/cmake \
+usr/include usr/lib/xml2Conf.sh usr/share/aclocal
+
+rm -r usr/{share/aclocal,include,lib/{cmake,pkgconfig,python*,xml2Conf.sh}}
+rm -d usr/lib
+}
+
+doc() {
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/$name.doc${PKGMK_BUILDVER}any.cards.tar \
+usr/share/doc usr/share/gtk-doc
+rm -r usr/share/{doc,gtk-doc}
+rm -d usr/share
 }
