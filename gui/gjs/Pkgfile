@@ -17,7 +17,6 @@ rm $PKG/usr/lib/libgjs.la
 }
 
 uptodate(){
-
 local latest lastversion url
 url="https://download.gnome.org/sources/$name"
 latest="`lynx -read_timeout=20 -dump -listonly -nonumbers \
