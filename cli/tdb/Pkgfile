@@ -7,11 +7,9 @@ contributors="Greg"
 makedepends=(python libxslt docbook-xsl)
 
 name=tdb
-version=1.4.2
+version=1.4.3
 
-makedepends=(python libxslt docbook-xsl)
-
-source=(http://samba.org/ftp/${name}/${name}-${version}.tar.gz)
+source=(https://samba.org/ftp/${name}/${name}-${version}.tar.gz)
 
 build() {
 
