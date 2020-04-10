@@ -1,18 +1,22 @@
-PKGMK_GROUPS=(devel man doc)
-PKGMK_IGNORE_UNPACK="yes"
-
 description="Next generation of the python high-level scripting language"
 url="http://www.python.org"
+
 contributors="Alienus"
 packager="tnut <tnut@nutyx.org>"
 
-name=python
-version=3.7.4
 makedepends=(sqlite expat libffi)
 alias=(python3 Python)
+
+name=python
+version=3.8.2
+release=2
+
 source=(http://www.python.org/ftp/python/$version/Python-$version.tar.xz
         https://docs.python.org/ftp/python/doc/$version/python-$version-docs-html.tar.bz2
         python.png)
+
+PKGMK_GROUPS=(devel man doc)
+PKGMK_IGNORE_UNPACK="yes"
 
 build() {
 tar -xvf Python-$version.tar.xz
@@ -24,9 +28,14 @@ tar -xvf Python-$version.tar.xz
                 --with-system-ffi \
          		--with-ensurepip=yes
 	make
+# Remove the tkinter stuff
+rm Lib/test/test_tk.py
+rm Lib/test/test_ttk_{gui,text}only.py
+rm -r Lib/tkinter
+
 	make DESTDIR=$PKG install
 
-	chmod -v 755 $PKG/usr/lib/libpython3.7m.so
+	chmod -v 755 $PKG/usr/lib/libpython3.8.so
 	chmod -v 755 $PKG//usr/lib/libpython3.so
 
 # Install all HTML Docs files with desktop menu integration
