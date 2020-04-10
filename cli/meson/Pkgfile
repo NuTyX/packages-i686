@@ -4,9 +4,11 @@ url="http://mesonbuild.com/"
 contributors="Jayce, Greg"
 packager="tnut <tnut@nutyx.org>"
 
-name=meson
-version=0.53.1
 makedepends=(python)
+
+name=meson
+version=0.54.0
+
 source=(https://github.com/mesonbuild/$name/releases/download/$version/$name-$version.tar.gz)
 
 build() {
