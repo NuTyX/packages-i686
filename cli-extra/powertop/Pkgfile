@@ -2,11 +2,12 @@ description="an intel provided tool that enhances powersaving"
 url="https://bellard.org/tcc/tcc-doc.html#Invoke"
 
 packager="cbarth15"
-contributors="cbarthi, Tnut"
+contributors="Cbarth, Tnut"
 
 makedepends=(libnl)
 
 name=powertop
+
 version=2.11
 
 source=(https://github.com/fenrus75/$name/archive/v$version.tar.gz)
