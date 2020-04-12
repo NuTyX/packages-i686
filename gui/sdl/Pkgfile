@@ -9,14 +9,17 @@ makedepends=(xorg-libxext xorg-libxrender xorg-libx11
              xorg-libxrandr xorg-libxinerama libxkbcommon wayland)
 
 name=sdl
-version=2.0.10
+version=2.0.12
 
-source=(sdl-2.0.10-gl-fix-1.patch
-        ${url}/release/SDL2-$version.tar.gz)
-
+source=(http://www.linuxfromscratch.org/patches/blfs/svn/SDL2-${version}-opengl_include_fix-1.patch
+	${url}/release/SDL2-$version.tar.gz)
 prepare() {
-cd SDL2-$version
-patch -Np1 -i ../sdl-2.0.10-gl-fix-1.patch
+case $(uname -m) in
+   i?86)
+	cd SDL2-$version
+	patch -Np1 -i ../SDL2-2.0.12-opengl_include_fix-1.patch
+	cd ..;;
+esac
 }
 build() {
   mkdir build
