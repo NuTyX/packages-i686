@@ -1,17 +1,21 @@
 description="SMB Fileserver and AD Domain server"
 url="http://www.samba.org"
+
 packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B, Tnut, Greg"
-
-name=samba
-version=4.10.6
 
 makedepends=(jansson rpcsvc-proto libtirpc docbook-xsl talloc 
              tevent avahi gnutls libgpg-error popt python2 
              cups kerberos libcap openldap tdb ldb)
+run=(samba.lib)
 
+name=samba
+version=4.11.6
+release=2
 
-nutyx_version=11.1
+nutyx_version=11.3
+
+PKGMK_GROUPS=(lib man devel service doc)
 
 source=(http://downloads.tuxfamily.org/nutyx/files/nutyx-${nutyx_version}.tar.xz
 	https://download.samba.org/pub/samba/stable/$name-$version.tar.gz)
@@ -33,7 +37,7 @@ LDFLAGS+=" -ltirpc"                       \
     --enable-fhs                        \
     --without-systemd                   \
     --enable-selftest                   \
-    --bundled-libraries=!talloc,!pytalloc-util,!tevent,!popt,!tdb,!ldb
+    --bundled-libraries=!talloc,!pytalloc-util,!tevent,!popt,!tdb,!ldb,!pyldb-util
 
 make
 
@@ -60,15 +64,37 @@ $PKG/etc/openldap/schema
 #  cups 
 cd $PKG/usr/lib/
 install -d cups/backend
-ln -v -sf $PKG/usr/bin/smbspool $PKG/usr/lib/cups/backend/smb
+ln -v -sf /usr/bin/smbspool $PKG/usr/lib/cups/backend/smb
 
 # service
 cd $SRC/nutyx-${nutyx_version}
 make DESTDIR=$PKG install-samba
 make DESTDIR=$PKG install-winbindd
 
-#  Doublon
-rm -rv $PKG/usr/lib/share/perl5/vendor/Parse/Yapp
+}
+lib() {
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/$name.lib${PKGMK_BUILDVER}${PKGMK_ARCH}.cards.tar \
+usr/lib/lib* \
+usr/bin/{smbclient,rpcclient,smbspool,smbtree,smbcacls,\
+smbcquotas,smbget,net,nmblookup,smbtar}
+
+rm usr/lib/lib*
+rm usr/bin/{smbclient,rpcclient,smbspool,smbtree,smbcacls,\
+smbcquotas,smbget,net,nmblookup,smbtar}
+rm -d /usr/lib
+rm -d usr/bin
+}
+devel() {
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/$name.devel${PKGMK_BUILDVER}any.cards.tar \
+usr/lib/pkgconfig usr/include
+
+rm -r usr/{include,lib/pkgconfig}
+rm -d usr/include
+rm -d usr/lib
 }
 uptodate() {
 local ext url name LINX
