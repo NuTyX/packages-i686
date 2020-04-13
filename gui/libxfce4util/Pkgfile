@@ -4,30 +4,20 @@ url="http://www.xfce.org/"
 packager="tnut <tnut@nutyx.org>"
 contributors="Tyrry, Greg"
 
-makedepends=(vim glib intltool)
+makedepends=(intltool glib gobject-introspection)
 
-name=xfce4-libutil
-_name=libxfce4util
-version=4.12.1
-release=3
+name=libxfce4util
+version=4.14.0
 
-source=(http://archive.xfce.org/src/xfce/${_name}/${version%.*}/${_name}-$version.tar.bz2)
+source=(http://archive.xfce.org/src/xfce/${name}/${version%.*}/${name}-$version.tar.bz2)
 
 build() {
 
-cd ${_name}-$version
+cd ${name}-$version
 
-./configure \
-    --prefix=/usr \
-    --sysconfdir=/etc \
-    --sbindir=/usr/bin \
-    --libexecdir=/usr/lib \
-    --localstatedir=/var \
-    --disable-static \
-    --disable-debug
-    
+./configure --prefix=/usr
 make
 make DESTDIR=$PKG install
 # Obsolet lib
-rm $PKG/usr/lib/libxfce4util.la
+rm $PKG/usr/lib/${name}.la
 }
