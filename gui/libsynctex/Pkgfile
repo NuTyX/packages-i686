@@ -1,0 +1,36 @@
+description="Library for synchronization between TeX files and resulting file"
+url="https://tug.org/texlive/"
+
+packager="tnut <tnut@nutyx.org>"
+contributors=""
+
+makedepends=(cairo icu xorg-pixman xorg-libxaw)
+
+name=libsynctex
+version=20200406
+
+source=(ftp://tug.org/texlive/historic/2020/texlive-$version-source.tar.xz)
+
+build() {
+cd texlive-$version-source
+mkdir build
+cd    build
+
+../configure --prefix=/usr \
+--mandir=/usr/share/man \
+--infodir=/usr/share/info \
+--with-system-zlib \
+--with-system-pixman \
+--with-system-cairo \
+--with-system-icu \
+--with-system-gmp \
+--with-system-mpfr \
+--disable-native-texlive-build \
+--disable-static \
+--enable-shared \
+--disable-dvisvgm
+make
+make -C texk/web2c
+make -C texk/web2c DESTDIR=$PKG \
+install-data-am install-libLTLIBRARIES
+}
