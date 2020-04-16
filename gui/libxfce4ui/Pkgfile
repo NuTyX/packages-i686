@@ -4,24 +4,20 @@ url="http://www.xfce.org/"
 packager="tnut <tnut@nutyx.org>"
 contributors="Tyrry, Greg"
 
-makedepends=(gtk2 gtk3 startup-notification xfce4-conf)
+makedepends=(gtk2 gtk3 xfconf gobject-introspection)
+run=(startup-notification hicolor-icon-theme)
 
-name=xfce4-libui
-_name=libxfce4ui
-version=4.12.1
-release=4
+name=libxfce4ui
+version=4.14.1
 
-source=(http://archive.xfce.org/src/xfce/${_name}/${version%.*}/${_name}-$version.tar.bz2)
+source=(http://archive.xfce.org/src/xfce/${name}/${version%.*}/${name}-$version.tar.bz2)
 
 build() {
 
-cd ${_name}-$version
+cd ${name}-$version
 
 	./configure           \
     	--prefix=/usr         \
-    	--sysconfdir=/etc     \
-    	--libexecdir=/usr/lib \
-	--localstatedir=/var  \
 	--disable-static      \
     	--disable-debug
     	
