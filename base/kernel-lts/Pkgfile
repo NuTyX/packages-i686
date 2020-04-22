@@ -1,17 +1,17 @@
 url="http://www.kernel.org"
-description="The long term stable kernel version 4.9.XX"
+description="The 4.9 longterm support Linux Kernel."
 
 packager="tnut <tnut@nutyx.org>"
-contributors="Pierre, Tnut"
+contributors="Pierre B"
 
 PKGMK_IGNORE_UNPACK="yes"
 PKGMK_NO_STRIP="yes"
 PKGMK_GROUPS=(devel doc)
 
 name=kernel-lts
-alias=(linux-4.9)
 
-version=4.9.218
+INITRD="initrd-${name/*-/}"
+version=4.9.219
 _version=${version:0:3}
 
 run=(nutyx)
@@ -88,25 +88,33 @@ $SRC/linux-${_version}
 rm -rf $PKG/lib/firmware
 
 # post-install autogen
-echo 'LK="."
-[ -L boot/kernel-lts ] && LK="`readlink boot/kernel-lts`"
-if [ "`dirname $LK`" != "." ]; then
-  echo "This is a efi installation"
-  ln -sf $LK boot/kernel-lts
-  if [ -f boot/$LK ]; then' > $PKGMK_ROOT/$name.post-install
-echo "    mv boot/kernel-$version-NuTyX-lts boot/\$LK 2>/dev/null
-    ln -sf \$LK boot/kernel-$version-NuTyX-lts
+echo "LK=\".\"
+[ -L boot/$name ] && LK=\"\$(readlink boot/$name)\"
+if [ \"\$(dirname \$LK)\" != \".\" ]; then
+  echo \"This is an efi installation\"
+  ln -sf \$LK boot/$name
+  if [ -f boot/\$LK ]; then
+    mv boot/$name-${KERNEL_VERSION} boot/\$LK 2>/dev/null
+    ln -sf \$LK boot/$name-${KERNEL_VERSION}
   else
     echo \"EFI Partition not found, mount EFI Partition and re-install the kernel\"
   fi
 else
   echo \"This is a bios installation\"
-  if [ -L boot/initrd-lts ]; then
-    mkinitramfs $version-NuTyX-lts
-    ln -sf initrd-$version-NuTyX-lts boot/initrd-lts
+  if [ -L boot/$INITRD ]; then
+    mkinitramfs ${KERNEL_VERSION}
+    ln -sf initrd-${KERNEL_VERSION} boot/$INITRD
   fi
-  ln -sf kernel-$version-NuTyX-lts boot/kernel-lts
-fi" >> $PKGMK_ROOT/$name.post-install
+  ln -sf kernel-${KERNEL_VERSION} boot/$name
+fi
+
+echo \"******************************************************************
+* This kernel-lts version is obsolet, it wont be upgrade anymore.*
+* You should replace this $name version as soon as possible.     *
+* See https://www.nutyx.org/en/upgrade-kernel-lts                *
+* or                                                             *
+* https://www.nutyx.org/fr/upgrade-kernel-lts                    *
+******************************************************************\"" > $PKGMK_ROOT/$name.post-install
 
 }
 devel() {
