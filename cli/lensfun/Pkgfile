@@ -4,19 +4,22 @@ url="http://lensfun.berlios.de"
 packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
 
-makedepends=(cmake glib libpng doxygen)
+makedepends=(cmake glib libpng doxygen python-docutils)
 
 name=lensfun
 version=0.3.95
-release=2
+release=3
 
-source=(http://sourceforge.net/projects/$name/files/$version/$name-$version.tar.gz
+source=(https://sourceforge.net/projects/$name/files/$version/$name-$version.tar.gz
 	)
 build(){
 cd $name-$version
 mkdir build
 cd build
-cmake .. -DLENSFUN_INSTALL_PREFIX=/usr
-make all
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
+ -DBUILD_DOC=on \
+  -Wno-dev
+make
+make docs
 make DESTDIR=$PKG install
 } 
