@@ -9,10 +9,8 @@ makedepends=(meson ninja intltool itstool gobject-introspection
 run=(gsettings-desktop-schemas desktop-file-utils
      gtk-update-icon-cache hicolor-icon-theme)
 
-set=(gnome)
-
 name=quadrapassel
-version=3.36.00
+version=3.36.02
 
 source=(https://download.gnome.org/sources/$name/${version:0:4}/$name-$version.tar.xz)
 
