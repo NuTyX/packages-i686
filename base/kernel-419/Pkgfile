@@ -7,9 +7,12 @@ contributors="Pierre B"
 run=(nutyx)
 
 name=kernel-419
-alias=(linux-4.19)
+version=4.19.121
 
-version=4.19.117
+alias=(linux-4.19)
+INITRD="initrd-${name/*-/}"
+KERNEL=${name/-*}
+
 _version=${version:0:4}
 
 PKGMK_IGNORE_UNPACK="yes"
@@ -50,7 +53,7 @@ cp .config $SRC/config
 cd $SRC/linux-${_version}
 make INSTALL_MOD_PATH=$PKG modules_install
 
-KERNEL_VERSION="${version}-NuTyX-419"
+KERNEL_VERSION="$(basename $PKG/lib/modules/*)"
 
 cd $SRC
 
@@ -63,11 +66,11 @@ cd $SRC/linux-${_version}
 mkdir -p $PKG/boot
 
 cp  System.map \
-$PKG/boot/System.map-$version-NuTyX-419
+$PKG/boot/System.map-${KERNEL_VERSION}
 cp  .config    \
-$PKG/boot/config-$version-NuTyX-419
+$PKG/boot/config-${KERNEL_VERSION}
 cp  arch/i386/boot/bzImage \
-$PKG/boot/kernel-$version-NuTyX-419
+$PKG/boot/$KERNEL-${KERNEL_VERSION}
 
 # Reorgenise the sources
 cd $PKG/lib/modules/${KERNEL_VERSION}/
@@ -94,18 +97,18 @@ if [ "$(dirname $LK)" != "." ]; then
   echo "This is a efi installation"
   ln -sf $LK boot/$name
   if [ -f boot/$LK ]; then' > $PKGMK_ROOT/$name.post-install
-echo "    mv boot/kernel-$version-NuTyX-419 boot/\$LK 2>/dev/null
-    ln -sf \$LK boot/kernel-$version-NuTyX-419
+echo "    mv boot/$KERNEL-${KERNEL_VERSION} boot/\$LK 2>/dev/null
+    ln -sf \$LK boot/$KERNEL-${KERNEL_VERSION}
   else
     echo \"EFI Partition not found, mount EFI Partition and re-install the kernel\"
   fi
 else
   echo \"This is a bios installation\"
   if [ -L boot/initrd-419 ]; then
-    mkinitramfs $version-NuTyX-419
-    ln -sf initrd-$version-NuTyX-419 boot/initrd-419
+    mkinitramfs ${KERNEL_VERSION}
+    ln -sf initrd-${KERNEL_VERSION} boot/$INITRD
   fi
-  ln -sf kernel-$version-NuTyX-419 boot/$name
+  ln -sf $KERNEL-${KERNEL_VERSION} boot/$name
 fi" >> $PKGMK_ROOT/$name.post-install
 
 }
