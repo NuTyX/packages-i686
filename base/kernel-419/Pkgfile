@@ -8,7 +8,7 @@ makedepends=(kmod)
 run=(nutyx)
 
 name=kernel-419
-version=4.19.128
+version=4.19.132
 
 alias=(linux-4.19)
 INITRD="initrd-${name/*-/}"
