@@ -7,6 +7,5 @@ packager="tnut <tnut@nutyx.org>"
 PKGMK_GROUPS=(devel man doc)
 
 name=popt
-version=1.16
-release=1
-source=(http://rpm5.org/files/$name/$name-$version.tar.gz)
+version=1.18
+source=(http://ftp.rpm.org/popt/releases/popt-1.x/$name-$version.tar.gz)
