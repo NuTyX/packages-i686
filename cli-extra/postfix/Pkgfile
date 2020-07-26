@@ -7,7 +7,7 @@ contributors="Berlius, Fanch, Greg, Minzord"
 makedepends=(libnsl db cyrus-sasl openssl icu mariadb openldap pcre postgresql sqlite)
 
 name=postfix
-version=3.5.0
+version=3.5.5
 nutyx_version=11.4
 
 source=(http://downloads.tuxfamily.org/nutyx/files/nutyx-${nutyx_version}.tar.xz
