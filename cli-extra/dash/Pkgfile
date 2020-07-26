@@ -5,6 +5,7 @@ packager="greg<greg@nutyx.org>"
 
 name=dash
 version=0.5.11.1
+release=2
 
 source=(http://gondor.apana.org.au/~herbert/dash/files/dash-$version.tar.gz)
 
