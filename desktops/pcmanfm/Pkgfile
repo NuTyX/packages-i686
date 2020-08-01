@@ -15,7 +15,7 @@ source=(https://downloads.sourceforge.net/$name/$name-$version.tar.xz
 
 prepare() {
 cd $name-$version
-patch -Np1 -i ../Fix-CVE-2017-8934.patch  
+#patch -Np1 -i ../Fix-CVE-2017-8934.patch  
 }
 
 build() {
