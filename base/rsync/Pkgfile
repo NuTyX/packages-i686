@@ -6,7 +6,7 @@ packager="tnut <tnut@nutyx.org>"
 name=rsync
 version=3.2.3
 
-nutyx_version=11.3
+nutyx_version=11.5
 
 source=(http://downloads.tuxfamily.org/nutyx/files/nutyx-${nutyx_version}.tar.xz
 	http://rsync.samba.org/ftp/$name/$name-$version.tar.gz
