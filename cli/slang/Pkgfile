@@ -4,8 +4,7 @@ packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
 
 name=slang
-version=2.3.1a
-release=1
+version=2.3.2
 
 source=(http://www.jedsoft.org/releases/$name/$name-$version.tar.bz2)
 
