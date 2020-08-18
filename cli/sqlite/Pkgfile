@@ -7,7 +7,7 @@ contributors="Pierre B, Tnut, Remy"
 _amalgamationver=3310100
 
 name=sqlite
-version=3320300
+version=3330000
 
 source=(https://sqlite.org/2020/sqlite-autoconf-${_amalgamationver}.tar.gz)
 
