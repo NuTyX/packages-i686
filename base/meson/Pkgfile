@@ -8,6 +8,7 @@ makedepends=(python)
 
 name=meson
 version=0.55.0
+release=2
 
 source=(https://github.com/mesonbuild/$name/releases/download/$version/$name-$version.tar.gz)
 
