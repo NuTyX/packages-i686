@@ -10,8 +10,8 @@ run=(pinentry)
 
 
 name=gnupg
-version=2.2.21
-release=2
+version=2.2.22
+release=3
 
 source=(https://gnupg.org/ftp/gcrypt/gnupg/gnupg-$version.tar.bz2)
 
