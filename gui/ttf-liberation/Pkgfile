@@ -8,7 +8,7 @@ run=(xorg-fontconfig xorg-font-util xorg-encodings fontforge )
 
 name=ttf-liberation
 version=2.00.1
-release=3
+release=4
 
 source=(https://releases.pagure.org/liberation-fonts/liberation-fonts-ttf-$version.tar.gz
 ttf-liberation.30-0-liberation-mono.conf
