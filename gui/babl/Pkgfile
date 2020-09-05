@@ -7,7 +7,8 @@ packager="tnut <tnut@nutyx.org>"
 makedepends=(meson ninja lcms2 gobject-introspection)
 
 name=babl
-version=0.1.74
+version=0.1.78
+release=2
 
 source=(http://download.gimp.org/pub/$name/${version:0:3}/$name-$version.tar.xz)
 prepare() {
