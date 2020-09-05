@@ -4,11 +4,11 @@ url="http://gegl.org/babl"
 contributors="Pierre B, tnut, greg"
 packager="tnut <tnut@nutyx.org>"
 
-makedepends=(meson ninja lcms2 gobject-introspection)
+makedepends=(meson ninja lcms2 gobject-introspection vala)
 
 name=babl
 version=0.1.78
-release=2
+release=4
 
 source=(http://download.gimp.org/pub/$name/${version:0:3}/$name-$version.tar.xz)
 prepare() {
