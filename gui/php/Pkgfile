@@ -11,7 +11,8 @@ makedepends=(apache libxml2 aspell aspell-dict libxslt enchant pcre
 
 
 name=php
-version=7.4.9
+version=7.4.10
+release=2
 
 source=(http://php.net/distributions/$name-$version.tar.xz)
 
