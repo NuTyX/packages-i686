@@ -13,7 +13,7 @@ makedepends=(xorgproto pkg-config libtool xorg-xrandr wayland python-mako
 alias=(xorg-mesa Mesa mesa3d Mesa3D mesa3)
 
 name=mesa
-version=20.1.6
+version=20.1.8
 
 source=(https://mesa.freedesktop.org/archive/mesa-$version.tar.xz
 	http://www.linuxfromscratch.org/patches/blfs/svn/mesa-20.1.5-add_xdemos-1.patch)
