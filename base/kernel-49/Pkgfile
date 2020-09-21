@@ -3,6 +3,7 @@ description="The 4.9 longterm support Linux Kernel version"
 
 packager="tnut <tnut@nutyx.org>"
 
+makedepends=(kmod)
 run=(nutyx)
 
 PKGMK_IGNORE_UNPACK="yes"
