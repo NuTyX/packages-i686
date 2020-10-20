@@ -6,7 +6,10 @@ packager="tnut <tnut@nutyx.org>"
 
 alias=(card)
 
+
 PKGMK_IGNORE_RUNTIMEDEPS="no"
+makedepends=(gettext)
+
 run_devel=(autoconf automake acl.devel attr.devel \
 bison binutils.devel bzip2.devel curl.devel e2fsprogs.devel \
 eudev.devel expat.devel file.devel flex.devel gawk gawk.devel \
@@ -22,7 +25,7 @@ dialog.devel tar wget zlib.devel)
 PKGMK_GROUPS=(devel doc man)
 
 name=cards
-version=2.4.122
+version=2.4.122.1
 
 [ "$release" != "1" ] &&  patchname="$name-$version-consolidate-$release.patch"
 
