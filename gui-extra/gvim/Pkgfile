@@ -8,21 +8,20 @@ makedepends=(vim, gtk3, xorg-libxt)
 run=(vim)
 
 name=gvim
-version=8.1
+version=8.2.1845
 release=2
 
-source=(ftp://ftp.vim.org/pub/vim/unix/vim-$version.tar.bz2)
+source=(http://anduin.linuxfromscratch.org/BLFS/vim/vim-$version.tar.gz)
 
 build () {
 
-    cd vim81/src
+    cd vim-$version/src
     
     ./configure --prefix=/usr \
+                --with-features=huge \
                 --with-vim-name=gvim \
-                --with-x=yes \
                 --enable-gui=gtk3 \
-                --enable-multibyte \
-                --disable-gpm
+                --with-tlib=ncursesw
 
     make
     make runtime
