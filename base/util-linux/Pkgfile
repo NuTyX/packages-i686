@@ -5,12 +5,18 @@ maintainer="Karel Zak kzak at redhat dot com"
 packager="tnut <tnut@nutyx.org>"
 contributors="Greg"
 
+makedepends=(systemd)
+
 name=util-linux
 version=2.36
+release=4
+
+PKGMK_IGNORE_FOOTPRINT='no'
 
 source=(https://www.kernel.org/pub/linux/utils/util-linux/v${version:0:4}/util-linux-$version.tar.xz)
 
 PKGMK_GROUPS=(devel doc man)
+PKGMK_LOCALES=()
 
 build()
 {
@@ -23,6 +29,7 @@ mkdir -pv $PKG/var/lib/hwclock
 ./configure ADJTIME_PATH=/var/lib/hwclock/adjtime \
 	--docdir=/usr/share/doc/$name-$version \
 	--disable-chfn-chsh  \
+	--sbindir=/usr/sbin  \
 	--disable-login      \
 	--disable-nologin    \
 	--disable-su         \
@@ -34,11 +41,8 @@ mkdir -pv $PKG/var/lib/hwclock
 
 make
 make DESTDIR=$PKG  install
-# for file in /usr/lib/libuuid*
-# do
-# rm $file
-# done
-
+mkdir -p $PKG/sbin
+mv $PKG/usr/sbin/agetty $PKG/sbin
 #
 ## service
 SERVICEDIR=/lib/init/services
