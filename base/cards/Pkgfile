@@ -8,24 +8,15 @@ alias=(card)
 
 
 PKGMK_IGNORE_RUNTIMEDEPS="no"
-makedepends=(gettext)
-
-run_devel=(autoconf automake acl.devel attr.devel \
-bison binutils.devel bzip2.devel curl.devel e2fsprogs.devel \
-eudev.devel expat.devel file.devel flex.devel gawk gawk.devel \
-gdbm.devel gettext.devel gmp.devel gperf kmod.devel iproute2.devel \
-libcap.devel libpipeline.devel m4 mpc.devel mpfr.devel \
-ncurses.devel openssl.devel pam.devel perl procps-ng.devel \
-readline.devel rsync lvm2.devel libtool texinfo \
-texinfo.devel nasm groff make patch pkg-config \
-glibc.devel gcc.devel libarchive.devel \
-util-linux.devel xz.devel lzo.devel \
-dialog.devel tar wget zlib.devel)
-
+makedepends=(bzip2 gettext xz)
+run_devel=(curl.devel gcc.devel glibc.devel libarchive.devel \
+openssl.devel zlib.devel bash binutils coreutils file \
+findutils gawk gettext groff make patch pkg-config \
+readline wget rsync xz)
 PKGMK_GROUPS=(devel doc man)
 
 name=cards
-version=2.4.122.1
+version=2.4.124
 
 [ "$release" != "1" ] &&  patchname="$name-$version-consolidate-$release.patch"
 
