@@ -1,0 +1,111 @@
+description="Programs for controlling the startup, running, and shutdown of the system."
+url="https://www.freedesktop.org/wiki/Software/systemd/"
+
+packager="tnut <tnut@nutyx.org>"
+
+# Those dependencies are need to compile the package
+# but not listed to avoid circular dependencies:
+# python meson and ninja
+
+makedepends=(libcap kmod m4 gperf pam)
+
+name=systemd
+version=246
+release=13
+
+PKGMK_IGNORE_FOOTPRINT='no'
+PKGMK_IGNORE_RUNTIMEDEPS='yes'
+PKGMK_GROUPS=(devel doc man lib)
+
+source=(http://download.tuxfamily.org/nutyx/files/$name-man-pages-$version.tar.xz
+	https://github.com/systemd/systemd/archive/v$version/systemd-$version.tar.gz)
+
+prepare() {
+ln -sf /bin/true /usr/bin/xsltproc
+sed -i "s@: (conf.get('HAVE_SYSV_COMPAT') == 1)@: true@" $name-$version/meson.build
+sed '177,$ d' -i $name-$version/src/resolve/meson.build
+sed -i 's/GROUP="render", //' $name-$version/rules.d/50-udev-default.rules.in
+cards install python meson ninja util-linux.devel
+}
+build() {
+
+
+cd $name-$version
+mv ../build build
+cd          build
+
+meson --prefix=/usr           \
+--sysconfdir=/etc             \
+--localstatedir=/var          \
+-Dfirstboot=false             \
+-Dinstall-tests=false         \
+-Dkmod-path=/bin/kmod         \
+-Dmount-path=/bin/mount       \
+-Dsplit-usr=true              \
+-Drpmmacrosdir=no             \
+-Dsulogin-path=/sbin/sulogin  \
+-Dumount-path=/bin/umount     \
+-Dman=true                    \
+-Dresolve=false               \
+-Dnetworkd=false              \
+-Dsysvinit-path=              \
+-Dsysvrcnd-path=              \
+-Dtimesyncd=false             \
+-Dsysusers=false              \
+-Duserdb=false                \
+..
+
+ninja
+
+DESTDIR=$PKG ninja install
+
+# systemd-initclt hack
+cp ../units/systemd-initctl.socket \
+$PKG/lib/systemd/system
+cp units/systemd-initctl.service.tmp \
+$PKG/lib/systemd/system/systemd-initctl.service
+ln -sv ../systemd-initctl.socket  \
+$PKG/lib/systemd/system/sockets.target.wants/systemd-initctl.socket
+
+mv $PKG/{,s}bin/udevadm
+ln -sv ../lib/systemd/systemd $PKG/sbin/systemd-init
+ln -svf ../../sbin/udevadm $PKG/lib/systemd/systemd-udevd
+
+# eudev Package files
+rm $PKG/sbin/udevadm
+rm -r $PKG/{lib,etc}/udev
+rm $PKG/usr/include/libudev.h
+rm $PKG/usr/lib/pkgconfig/libudev.pc
+rm $PKG/usr/share/pkgconfig/udev.pc
+rm $PKG/lib/libudev*
+rm $PKG/lib/systemd/network/99-default.link
+rm $PKG/usr/share/bash-completion/completions/udevadm
+rm $PKG/usr/share/zsh/site-functions/_udevadm
+
+# sysvinit package files
+rm $PKG/sbin/{halt,init,poweroff,reboot,shutdown}
+
+# Prevent systemd from resetting the maximum PID value
+rm -f $PKG/usr/lib/sysctl.d/50-pid-max.conf
+
+rm /usr/bin/xsltproc
+
+# elogind package files
+rm $PKG/{bin/loginctl,usr/bin/busctl}
+rm $PKG/usr/share/bash-completion/completions/loginctl
+rm $PKG/usr/share/dbus-1/system-services/org.freedesktop.login1.service
+rm -r $PKG/usr/share/factory/etc/pam.d
+rm $PKG/usr/share/polkit-1/actions/org.freedesktop.login1.policy
+rm $PKG/usr/share/zsh/site-functions/_loginctl
+rm $PKG/lib/systemd/system/multi-user.target.wants/systemd-logind.service
+rm $PKG/lib/systemd/system/systemd-logind.service
+}
+lib() {
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/$name.lib${PKGMK_BUILDVER}${PKGMK_ARCH}.cards.tar \
+lib/lib* lib/systemd/libsystemd-shared*
+
+rm lib/lib* lib/systemd/libsystemd-shared*
+rm -d lib || true
+}
