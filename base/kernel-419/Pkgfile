@@ -4,11 +4,11 @@ description="The 4.19 longterm support Linux Kernel version."
 packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
 
-makedepends=(kmod)
-run=(nutyx)
+makedepends=(bison flex perl m4)
+run=(nutyx kmod busybox)
 
 name=kernel-419
-version=4.19.146
+version=4.19.163
 
 alias=(linux-4.19)
 INITRD="initrd-${name/*-/}"
