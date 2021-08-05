@@ -6,13 +6,13 @@ if [ ! -f etc/hostname ]; then
    log_success_msg2  "${INFO} Created /etc/hostname file ${NORMAL}"
 fi
 
-# /etc/vconsole
-if [ ! -f etc/vconsole ]; then
+# /etc/vconsole.conf file
+if [ ! -f etc/vconsole.conf ]; then
    if [ -f etc/sysconfig/console ]; then
       . etc/sysconfig/console
       echo "FONT=$FONT
-KEYMAP=$KEYMAP" > etc/vconsole && \
-     log_success_msg2  "${INFO} Created /etc/vconsole file ${NORMAL}"
+KEYMAP=$KEYMAP" > etc/vconsole.conf && \
+     log_success_msg2  "${INFO} Created /etc/vconsole.conf file ${NORMAL}"
    fi
 fi
 
@@ -69,3 +69,5 @@ UseDomains=true
         log_success_msg2  "${INFO} Created /etc/systemd/network/$interface.network file ${NORMAL}"
     done
 fi
+[ -f /etc/profile.d/i18n.sh ]  && setup-nutyx -ul
+sed -i "/dir \/var\/lib\/pkg\/depot\/desktops$/d" etc/cards.conf
