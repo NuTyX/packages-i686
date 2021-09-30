@@ -1,15 +1,15 @@
 description="Library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine"
 url="http://www.sqlite.org/"
 
-packager="spiky <spiky@nutyx.org>"
+packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B, Tnut, Remy"
 
-_amalgamationver=3330000
+_amalgamationver=3360000
 
 name=sqlite
-version=3330000
+version=3.36.0
 
-source=(https://sqlite.org/2020/sqlite-autoconf-${_amalgamationver}.tar.gz)
+source=(https://sqlite.org/2021/sqlite-autoconf-${_amalgamationver}.tar.gz)
 
 build() {
   cd $name-autoconf-${_amalgamationver}
