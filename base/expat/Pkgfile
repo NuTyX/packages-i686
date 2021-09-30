@@ -4,17 +4,16 @@ url="http://expat.sourceforge.net/"
 packager="tnut <tnut@nutyx.org>"
 
 name=expat
-version=2.2.9
+version=2.4.1
 
 source=(http://prdownloads.sourceforge.net/$name/$name-$version.tar.bz2)
 
 build() {
 cd $name-$version
 
-sed -i 's|usr/bin/env |bin/|' run.sh.in
-
 ./configure --prefix=/usr \
-            --docdir=/usr/share/doc/$name-$version
+	--disable-static \
+	--docdir=/usr/share/doc/$name-$version
 
 make
 make DESTDIR=$PKG install
