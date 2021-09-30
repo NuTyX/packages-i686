@@ -1,39 +1,74 @@
 description="The GRUB package contains the GRand Unified Bootloader."
 url="http://www.gnu.org/software/grub/"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Pierre B"
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre,Schrodinger72,Tnut"
 
 name=grub
-version=2.04
-pyversion=3.8.1
+version=2.06
+release=5
 
-source=(https://www.python.org/ftp/python/$pyversion/Python-$pyversion.tar.xz
+dejavu_version=2.37
+splash_version=21.03.0-rc4
+
+makedepends=(automake m4 bison flex gettext texinfo python
+             xz efibootmgr efivar freetype lvm2)
+
+source=(https://download.tuxfamily.org/nutyx/files/splash-${splash_version}.png
+	https://ftp.gnu.org/gnu/unifont/unifont-13.0.06/unifont-13.0.06.pcf.gz
+	http://downloads.sourceforge.net/dejavu/dejavu-fonts-ttf-${dejavu_version}.tar.bz2
         https://ftp.gnu.org/gnu/grub/grub-$version.tar.xz
+        grub
 	grub.cfg)
 
-PKGMK_GROUPS=(man locale)
-prepare() {
+PKGMK_GROUPS=(man)
+PKGMK_LOCALES=()
 
-   cd Python-$pyversion
-   rm -r Doc
-   ./configure --prefix=$SRC/tools --with-ensurepip=no
-   make
-   make libinstall bininstall
+unset MAKEFLAGS
+unset CFLAGS
+unset CXXFLAGS
+
+prepare() {
+mv dejavu-fonts-ttf-${dejavu_version}/ttf/Deja* \
+grub-$version
+gunzip -c unifont-13.0.06.pcf.gz \
+> grub-$version/unifont.pcf
 }
+
 build() {
-        export PATH=$SRC/tools/bin:$PATH
+  cp -a grub-$version grub-efi-$version
+
 	cd grub-$version
 	./configure --prefix=/usr \
 		--sysconfdir=/etc       \
 		--sbindir=/sbin        \
-		--disable-grub-emu-usb  \
-		--disable-efiemu \
 		--infodir=/usr/share/info \
-		--disable-werror
+                --with-platform=pc \
+                --disable-efiemu \
+                --enable-grub-mkfont \
+                --disable-werror
+
 	make
 	make DESTDIR=$PKG install
+
+  cd ../grub-efi-$version
+	./configure --prefix=/usr \
+		--sysconfdir=/etc       \
+		--sbindir=/sbin        \
+		--disable-efiemu \
+		--infodir=/usr/share/info \
+                --with-platform=efi \
+		--disable-werror
+	make
+	mkdir $SRC/dest
+	make DESTDIR=$SRC/dest install
         install -d $PKG/boot/grub
 	install -Dm644 ../grub.cfg \
 	$PKG/boot/grub/grub.cfg.exemple
+
+	cp -r $SRC/dest/usr/lib/grub/i386-efi $PKG/usr/lib/grub/
+
+        install -Dm644 ../grub $PKG/etc/default/grub
+	install -Dm644 ../splash-${splash_version}.png \
+	$PKG/usr/share/grub/splash.png
 }
