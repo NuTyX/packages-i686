@@ -6,15 +6,13 @@ contributors="Pierre B"
 packager="tnut <tnut@nutyx.org>"
 
 name=gzip
-version=1.10
+version=1.11
 
 source=(http://ftp.gnu.org/gnu/gzip/gzip-$version.tar.xz)
 
 build()
 {
-cd gzip-$version
-sed -i 's/IO_ftrylockfile/IO_EOF_SEEN/' lib/*.c
-echo "#define _IO_IN_BACKUP 0x100" >> lib/stdio-impl.h
+cd $name-$version
 
 ./configure --prefix=/usr
 make
