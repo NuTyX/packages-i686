@@ -1,0 +1,23 @@
+description="Keyutils is a set of utilities for managing the key retention facility in the kernel."
+url=" https://rhn.redhat.com/errata/RHEA-2006-0090.html"
+
+packager="tnut <tnut@nutryx.org>"
+contributors="Pierre B"
+
+name=keyutils
+version=1.6.3
+
+source=(request-key.conf.patch reproducible.patch
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git/snapshot/$name-$version.tar.gz)
+
+build() {
+        cd $name-$version
+
+	patch -Np0 -i ../request-key.conf.patch
+	patch -Np1 -i ../reproducible.patch
+
+	make CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}"
+
+        make
+        make  DESTDIR=$PKG install
+}
