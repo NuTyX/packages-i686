@@ -1,14 +1,16 @@
 description="Next generation of the python high-level scripting language"
 url="http://www.python.org"
 
-contributors="Alienus"
+contributors="Alienus,Spiky"
 packager="tnut <tnut@nutyx.org>"
 
-makedepends=(sqlite expat libffi)
+makedepends=(bzip2 xz gdbm zlib util-linux ncurses sqlite libffi)
 alias=(python3 Python)
 
+set=(devel)
+
 name=python
-version=3.8.3
+version=3.9.7
 
 source=(http://www.python.org/ftp/python/$version/Python-$version.tar.xz
         https://docs.python.org/ftp/python/doc/$version/python-$version-docs-html.tar.bz2
@@ -18,14 +20,13 @@ PKGMK_GROUPS=(devel man doc)
 PKGMK_IGNORE_UNPACK="yes"
 
 build() {
-tar -xvf Python-$version.tar.xz
+bsdtar -xf Python-$version.tar.xz
 	cd Python-$version
 	CXX="/usr/bin/g++" \
 	./configure --prefix=/usr \
                 --enable-shared \
-                --with-system-expat \
                 --with-system-ffi \
-         		--with-ensurepip=yes
+		--with-ensurepip=yes
 	make
 # Remove the tkinter stuff
 rm Lib/test/test_tk.py
@@ -34,8 +35,14 @@ rm -r Lib/tkinter
 
 	make DESTDIR=$PKG install
 
-	chmod -v 755 $PKG/usr/lib/libpython3.8.so
+	chmod -v 755 $PKG/usr/lib/libpython3.9.so
 	chmod -v 755 $PKG//usr/lib/libpython3.so
+
+	ln -s python3          $PKG/usr/bin/python
+	ln -s python3-config   $PKG/usr/bin/python-config
+	ln -s idle3            $PKG/usr/bin/idle
+	ln -s pydoc3           $PKG/usr/bin/pydoc
+	ln -s python${version%.*}.1 $PKG/usr/share/man/man1/python.1
 
 # Install all HTML Docs files with desktop menu integration
 
