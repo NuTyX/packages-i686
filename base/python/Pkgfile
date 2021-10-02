@@ -4,7 +4,7 @@ url="http://www.python.org"
 contributors="Alienus,Spiky"
 packager="tnut <tnut@nutyx.org>"
 
-makedepends=(bzip2 xz gdbm zlib util-linux ncurses sqlite libffi)
+makedepends=(bzip2 xz gdbm zlib util-linux ncurses sqlite expat libffi)
 alias=(python3 Python)
 
 set=(devel)
@@ -25,6 +25,7 @@ bsdtar -xf Python-$version.tar.xz
 	CXX="/usr/bin/g++" \
 	./configure --prefix=/usr \
                 --enable-shared \
+                --with-system-expat \
                 --with-system-ffi \
 		--with-ensurepip=yes
 	make
