@@ -1,0 +1,69 @@
+description="Freedesktop.org message bus system"
+url="http://www.freedesktop.org/wiki/Software/dbus/"
+
+packager="tnut <tnut@nutyx.org>"
+contributors="Pierre B, Jayce"
+
+makedepends=(systemd expat)
+
+name=dbus
+version=1.12.20
+release=5
+
+runyx_version=20200412
+
+PKGMK_GROUPS=(doc devel)
+source=(http://downloads.nutyx.org/files/runyx-${runyx_version}.tar.xz
+		http://dbus.freedesktop.org/releases/dbus/$name-$version.tar.gz
+		dbus.system-local.conf)
+
+build() {
+	cd $name-$version
+	./configure --prefix=/usr                     \
+            --sysconfdir=/etc                     \
+            --localstatedir=/var                  \
+            --disable-doxygen-docs                \
+            --disable-xml-docs                    \
+            --disable-static                      \
+            --docdir=/usr/share/doc/dbus-$version \
+            --with-console-auth-dir=/run/console  \
+            --with-system-pid-file=/run/dbus/pid  \
+	    --with-system-socket=/run/dbus/system_bus_socket \
+	    --with-systemdsystemunitdir=/lib/systemd/system  \
+	    --enable-systemd
+	make
+	make DESTDIR=$PKG install
+
+	# Adjust some files
+	mv -v $PKG/usr/lib/libdbus-1.so.* $PKG/lib
+	ln -sfv ../../lib/$(readlink $PKG/usr/lib/libdbus-1.so) \
+	$PKG/usr/lib/libdbus-1.so
+	chown -v root:messagebus $PKG/usr/libexec/dbus-daemon-launch-helper
+	chmod -v      4750       $PKG/usr/libexec/dbus-daemon-launch-helper
+    mkdir -p $PKG/etc/dbus-1
+    mv ../dbus.system-local.conf $PKG/etc/dbus-1/system-local.conf
+
+    # service
+    cd ../runyx-${runyx_version}
+    make DESTDIR=$PKG install-sysv-dbus
+    make DESTDIR=$PKG install-runyx-dbus
+
+    sed -i "s@--config-file=/etc/dbus-1/system.conf@--system@" \
+    $PKG/lib/init/services/dbus/run
+ 
+    mkdir -p $PKG/usr/lib/dbus-1.0/services
+    mkdir -p $PKG/usr/share/dbus-1/services
+    mkdir -p $PKG/etc/dbus-1/system.d/
+    mkdir -p $PKG/etc/dbus-1/session.d/
+}
+package(){
+	rm $PKG/usr/lib/libdbus-1.la
+	rm $PKG/usr/bin/dbus-launch
+}
+uptodate() {
+local url ext
+ext=".tar.gz"
+url="https://dbus.freedesktop.org/releases/dbus"
+lynx -read_timeout=20 -dump -listonly -nonumbers \
+$url/?C=N\;O=D|grep $name-[0-9]|grep $ext$|head -1|sed "s@$url/$name-@@"|sed "s/$ext//"
+}
