@@ -5,19 +5,34 @@ maintainer="Roy Marples"
 packager="tnut <tnut@nutyx.org>"
 
 name=dhcpcd
-version=8.1.6
+version=9.4.0
+release=2
 
-source=(http://roy.marples.name/downloads/$name/$name-$version.tar.xz)
+runyx_version=20201011
+source=(http://download.tuxfamily.org/nutyx/files/runyx-${runyx_version}.tar.xz
+	https://roy.marples.name/downloads/$name/$name-$version.tar.xz)
 
+prepare() {
+groupadd -g 52 $name
+useradd -c 'dhcpcd PrivSep' -d /var/lib/$name \
+-g $name -s /bin/false -u 52 $name
+}
 build() {
+install -v m700 -d $PKG/var/lib/$name
 cd $name-$version
 ./configure \
---libexecdir=/lib/dhcpcd \
---dbdir=/var/lib/dhcpcd
+--libexecdir=/lib/$name \
+--dbdir=/var/lib/$name \
+--privsepuser=dhcpcd
 make
 make DESTDIR=$PKG install
+
 #
 ## service
+cd ../runyx-${runyx_version}
+make DESTDIR=$PKG -C services/sysv install-service-dhcpcd
+
+
 SERVICEDIR=/lib/init/services/${name}
 mkdir -p $PKG/{var/log/${name},$SERVICEDIR/{,log}}
 cat > $PKG/$SERVICEDIR/run << "EOF"
@@ -36,5 +51,13 @@ cat > $PKG/$SERVICEDIR/log/run << "EOF"
 #!/bin/sh
 exec chpst svlogd -tt /var/log/dhcpcd
 EOF
+chmod 755 $PKG/$SERVICEDIR/{run,/log/run}
+for i in single multi
+do
+  mkdir -p $PKG/etc/init/$i
+  ln -sv /lib/init/services/$name $PKG/etc/init/$i/$name
+done
 
+make DESTDIR=$PKG install-sysd-dhcpcd
+sed -i "s@^Before@# Before@" $PKG/lib/systemd/system/dhcpcd@.service
 }
