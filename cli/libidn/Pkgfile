@@ -1,10 +1,11 @@
 description="Designed for internationalized string handling based on the Stringprep"
 url="http://www.gnu.org/software/libidn/"
-packager="tnut <tnut@nutyx.org>"
-contributors="Pierre B"
+
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre B, tnut"
 
 name=libidn
-version=1.35
+version=1.38
 
 source=(http://ftp.gnu.org/gnu/$name/$name-$version.tar.gz)
 build() {
@@ -13,7 +14,7 @@ cd $name-$version
 --mandir=/usr/share/man --infodir=/usr/share/info
 make
 make DESTDIR=$PKG install
-rm $PKG/usr/share/info/{dir,libidn-components.png}
+rm $PKG/usr/share/info/libidn-components.png
 # Doc
 find doc -name "Makefile*" -delete
 rm -rf -v doc/{gdoc,idn.1,stamp-vti,man,texi}
