@@ -3,13 +3,12 @@ url="http://freshmeat.net/projects/util-linux/"
 
 maintainer="Karel Zak kzak at redhat dot com"
 packager="tnut <tnut@nutyx.org>"
-contributors="Greg"
+contributors="Greg,Fabienwang"
 
-makedepends=(systemd)
+makedepends=(eudev file ncurses readline systemd zlib)
 
 name=util-linux
-version=2.36
-release=4
+version=2.37.2
 
 PKGMK_IGNORE_FOOTPRINT='no'
 
