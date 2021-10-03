@@ -1,14 +1,16 @@
 description="Utilities for handling the ext2,3 and 4 files system."
 url="http://e2fsprogs.sourceforge.net/"
+
 maintainer="Ted Ts'o tytso at mit dot edu,tytso at alum dot mit dot edu"
 packager="tnut <tnut@nutyx.org>"
 
+makedepends=(util-linux texinfo sed)
 PKGMK_GROUPS=(devel man doc)
 
 name=e2fsprogs
-version=1.45.6
-release=2
-makedepends=(util-linux texinfo)
+version=1.46.4
+
+PKGMK_LOCALES=()
 
 source=(http://prdownloads.sourceforge.net/$name/$name-$version.tar.gz)
 
@@ -33,14 +35,12 @@ make DESTDIR=$PKG install install-libs || make -j1 DESTDIR=$PKG install install-
 
 chmod -v u+w $PKG/usr/lib/{libcom_err,libe2p,libext2fs,libss}.a
 
-if [ -f $PKG/usr/share/info/libext2fs.info.gz ]; then
-   gunzip -v $PKG/usr/share/info/libext2fs.info.gz
-   install-info --dir-file=$PKG/usr/share/info/dir $PKG/usr/share/info/libext2fs.info
-   makeinfo -o doc/com_err.info ../lib/et/com_err.texinfo
+gunzip -v $PKG/usr/share/info/libext2fs.info.gz
+install-info --dir-file=$PKG/usr/share/info/dir $PKG/usr/share/info/libext2fs.info
+makeinfo -o doc/com_err.info ../lib/et/com_err.texinfo
 
-   install -v -m644 doc/com_err.info $PKG/usr/share/info
-   install-info --dir-file=$PKG/usr/share/info/dir $PKG/usr/share/info/com_err.info
-fi
+install -v -m644 doc/com_err.info $PKG/usr/share/info
+install-info --dir-file=$PKG/usr/share/info/dir $PKG/usr/share/info/com_err.info
 }
 devel()
 {
