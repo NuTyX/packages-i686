@@ -1,15 +1,22 @@
 description="GNU compiler collection, which includes the C, C++, fortran and objc compilers."
 url="http://gcc.gnu.org"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Pierre B"
+packager="fabienwang <fabienwang@nutyx.org>"
+contributors="Pierre B, Tnut"
 maintainer="Jakub Jelinek (jakub at redhat dot com),Manuel López-Ibáñez (manu at gcc dot gnu.org,Giovanni Bajo,Peter Barada,Gerald Baumgartner and a lot more."
 
+makedepends=(gmp mpfr mpc tar)
 name=gcc
-version=10.2.0
+version=11.2.0
 
 PKGMK_KEEP_LA_LIBS="yes"
+PKGMK_IGNORE_UNPACK="yes"
+PKGMK_LOCALES=()
 source=(http://ftp.gnu.org/gnu/gcc/gcc-$version/gcc-$version.tar.xz)
+
+prepare() {
+tar -xf $name-$version.tar.xz
+}
 
 build()
 {
@@ -17,20 +24,16 @@ cd gcc-$version
 
 case $(uname -m) in
   x86_64)
-    sed -e '/m64=/s/lib64/lib/' \
-    -i.orig gcc/config/i386/t-linux64
+    sed -i.orig '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
   ;;
 esac
-
-[ -L /tools ] && rm -f /usr/lib/gcc
 
 mkdir -v build
 cd       build
 
-SED=sed \
 ../configure --prefix=/usr \
     --libdir=/usr/lib \
-    --enable-languages=c,c++,objc,fortran \
+    --enable-languages=c,c++,d,fortran,go,objc,obj-c++ \
     --disable-multilib \
     --disable-bootstrap \
     --with-system-zlib
