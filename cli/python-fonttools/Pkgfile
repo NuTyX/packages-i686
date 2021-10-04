@@ -1,0 +1,23 @@
+description="A library to manipulate font files from Python"
+url="https://github.com/fonttools/fonttools"
+
+packager="spiky <spiky@nutyx.org>"
+contributors=", tnut"
+
+makedepends=(cython)
+run=(python)
+
+name=python-fonttools
+version=4.27.1
+
+PKGMK_KEEP_SOURCES="no"
+source=(https://github.com/fonttools/fonttools/archive/refs/tags/$version.tar.gz)
+
+build() {
+ cd fonttools-$version
+ python3 setup.py build_ext --inplace
+ python3 setup.py build
+
+ python3 setup.py install --skip-build --root=$PKG --optimize=1
+
+}
