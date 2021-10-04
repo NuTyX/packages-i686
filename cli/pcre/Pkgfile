@@ -1,12 +1,14 @@
 description="Perl Compatible Regular Expression libraries."
 url="http://www.pcre.org/"
-packager="tnut <tnut@nutyx.org>"
-contributors="Pierre B"
+
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre,Tnut"
 
 name=pcre
-version=8.44
+version=8.45
 
-source=( https://ftp.pcre.org/pub/pcre/$name-$version.tar.bz2 )
+makedepends=(bzip2 readline)
+source=(https://ftp.pcre.org/pub/pcre/$name-$version.tar.bz2 )
 
 build() {
 cd $name-$version
