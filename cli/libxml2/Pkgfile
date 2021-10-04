@@ -2,49 +2,28 @@ description="Libraries and utilities used for parsing XML files."
 url="http://xmlsoft.org/"
 
 packager="tnut <tnut@nutyx.org>"
-contributors="Pierre B, Fanch"
+contributors="Pierre B, Fanch, Schrodinger72"
 
-makedepends=(python2 python)
+makedepends=(python)
 
 name=libxml2
-version=2.9.10
-release=2
+version=2.9.12
 
 PKGMK_GROUPS=(lib man devel doc)
-source=(ftp://xmlsoft.org/libxml2/$name-$version.tar.gz)
+source=(http://xmlsoft.org/sources/$name-$version.tar.gz)
 
 
-prepare() {
-mkdir build-py{2,3}
-}
+build() {
+cd $name-$version
 
-_build() {
-cd build-py$1
-../$name-$version/configure \
+./configure \
     --prefix=/usr \
     --disable-static \
     --with-history \
-    --with-python=/usr/bin/python$1
-
-  PYTHONHASHSEED=0 make
-  find doc -type f -exec chmod 0644 {} +
-cd ..
-}
-
-build() {
-
-_build 2
-_build 3
-}
-
-package() {
-
-make -C build-py2  DESTDIR=$PKG install
-make -C build-py3/python  DESTDIR=$PKG install
-
+    --with-python=/usr/bin/python3
+make
+make DESTDIR=$PKG install
 rm $PKG/usr/lib/$name.la
-rm $PKG/usr/lib/python3.8/site-packages/libxml2mod.la
-rm $PKG/usr/lib/python2.7/site-packages/libxml2mod.la
 }
 
 lib() {
@@ -54,18 +33,18 @@ $PKGMK_PACKAGE_DIR/$name.lib${PKGMK_BUILDVER}${PKGMK_ARCH}.cards.tar \
 usr/lib/libxml2*
 
 rm usr/lib/libxml2*
-rm -d usr/lib
+rm -d usr/lib || true
 }
 
 devel() {
 cd $PKG
 bsdtar -cf \
 $PKGMK_PACKAGE_DIR/$name.devel${PKGMK_BUILDVER}any.cards.tar \
-usr/lib/cmake usr/lib/pkgconfig usr/lib/python* usr/lib/cmake \
+usr/lib/cmake usr/lib/pkgconfig usr/lib/cmake \
 usr/include usr/lib/xml2Conf.sh usr/share/aclocal
 
-rm -r usr/{share/aclocal,include,lib/{cmake,pkgconfig,python*,xml2Conf.sh}}
-rm -d usr/lib
+rm -r usr/{share/aclocal,include,lib/{cmake,pkgconfig,xml2Conf.sh}}
+rm -d usr/lib || true
 }
 
 doc() {
@@ -74,5 +53,5 @@ bsdtar -cf \
 $PKGMK_PACKAGE_DIR/$name.doc${PKGMK_BUILDVER}any.cards.tar \
 usr/share/doc usr/share/gtk-doc
 rm -r usr/share/{doc,gtk-doc}
-rm -d usr/share
+rm -d usr/share || true
 }
