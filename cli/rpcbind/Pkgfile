@@ -1,18 +1,17 @@
 description="portmap replacement which supports RPC over various protocols"
 url="http://rpcbind.sourceforge.net/"
 
-contributors="Alienus"
-packager="tnut <tnut@nutyx.org>"
+contributors="Alienus,Tnut"
+packager="spiky <spiky@nutyx.org>"
 
 makedepends=(libtirpc)
 
 PKGMK_GROUPS=(man)
 
 name=rpcbind
-version=1.2.5
-release=4
+version=1.2.6
 
-runyx_version=20200412
+runyx_version=20201011
 source=(http://downloads.tuxfamily.org/nutyx/files/runyx-${runyx_version}.tar.xz
 	http://downloads.sourceforge.net/rpcbind/rpcbind-$version.tar.bz2
 	http://www.linuxfromscratch.org/patches/blfs/svn/rpcbind-$version-vulnerability_fixes-1.patch)
@@ -38,6 +37,9 @@ build() {
 
     make DESTDIR=$PKG install-runyx-rpcbind
     make DESTDIR=$PKG install-runyx-netfs
+    sed -i 's@/usr/bin@/sbin@' \
+    $PKG/lib/init/services/rpcbind/run
+
 
     make DESTDIR=$PKG install-sysd-rpcbind
  
@@ -52,4 +54,3 @@ lib/systemd
 rm -r etc/rc.d etc/init lib/init \
 lib/systemd
 }
-
