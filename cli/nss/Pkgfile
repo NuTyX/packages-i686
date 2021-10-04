@@ -2,25 +2,26 @@ description="Cross-platform development of security-enabled client and server ap
 url="http://www.mozilla.org"
 
 packager="tnut <tnut@nutyx.org>"
-contributors="Pierre B"
+contributors="Pierre,Fabienwang,Spiky"
 
-makedepends=(nspr sqlite)
+makedepends=(perl nspr sqlite)
 
 name=nss
-version=3.58
+version=3.70
 
 source=(https://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_${version//./_}_RTM/src/nss-$version.tar.gz \
-	http://www.linuxfromscratch.org/patches/blfs/svn/nss-$version-standalone-1.patch)
+	nss-standalone-1.patch)
 
 build () {
 	cd $name-$version
-	patch -Np1 -i ../nss-$version-standalone-1.patch
+	patch -Np1 -i ../nss-standalone-1.patch
 	cd nss
 # Compilation
 	make -j1 nss_build_all BUILD_OPT=1     		     \
   		NSPR_INCLUDE_DIR=/usr/include/nspr           \
   		USE_SYSTEM_ZLIB=1                            \
   		ZLIB_LIBS=-lz                                \
+                NSS_ENABLE_WERROR=0                          \
   		$([ $(uname -m) = x86_64 ] && echo USE_64=1) \
   		$([ -f /usr/include/sqlite3.h ] && echo NSS_USE_SYSTEM_SQLITE=1)
 
