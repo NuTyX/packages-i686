@@ -1,0 +1,33 @@
+description="Internet Wireless Daemon" 
+url="https://git.kernel.org/cgit/network/wireless/iwd.git/"
+
+packager="spiky <spiky@nutyx.org>"
+contributors="Dania, Rems, tnut"
+
+makedepends=(dbus python-docutils readline)
+
+name=iwd
+version=1.18
+
+source=(https://mirrors.edge.kernel.org/pub/linux/network/wireless/$name-$version.tar.xz)
+
+build() {
+  cd $name-$version
+
+        ./configure --prefix=/usr \
+                    --sysconfdir=/etc \
+                    --localstatedir=/var \
+                    --runstatedir=/run \
+                    --libexecdir=/usr/lib/iwd \
+                    --enable-wired \
+                    --enable-ofono \
+                    --enable-sim-hardcoded \
+                    --enable-hwsim \
+                    --disable-tools
+
+  make
+  make install DESTDIR=$PKG
+
+  install -dm700 $PKG/var/lib/ead/
+  install -dm700 $PKG/var/lib/iwd/
+}
