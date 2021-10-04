@@ -1,15 +1,25 @@
 description="ISO AAC audio decoder"
 url="http://www.audiocoding.com"
+
 packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
 
+makedepends=(autoconf automake libtool)
+
 name=faad2
-version=2.8.8
+version=2.10.0
 
-source=(http://downloads.sourceforge.net/sourceforge/faac/$name-$version.tar.gz)
+_version=${version//./_}
 
-build=autotools
+source=(https://github.com/knik0/faad2/archive/${_version}/$name-${_version}.tar.gz)
 
-package() {
+build() {
+cd $name-${_version}
+./bootstrap
+./configure --prefix=/usr --disable-static
+make
+make DESTDIR=$PKG install
+
+# Obsolet lib
 rm $PKG/usr/lib/libfaad{,_drm}.la
 }
