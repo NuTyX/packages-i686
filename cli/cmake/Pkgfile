@@ -1,13 +1,14 @@
 description="A cross-platform open-source make system"
 url="http://www.cmake.org/"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Pierre B, Fanch, Greg"
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre,Fanch,Greg,Tnut"
+
+set=(devel)
+makedepends=(ncurses expat libuv curl libarchive jsoncpp rhash)
 
 name=cmake
-version=3.18.4
-
-makedepends=(libuv)
+version=3.21.3
 
 source=($url/files/v${version%.*}/$name-$version.tar.gz)
 
@@ -19,8 +20,6 @@ sed -i '/"lib64"/s/64//' Modules/GNUInstallDirs.cmake
 ./bootstrap --prefix=/usr \
 --mandir=/share/man \
 --system-libs \
---no-system-jsoncpp \
---no-system-librhash \
 --docdir=/share/doc/cmake-$version
 
 make
