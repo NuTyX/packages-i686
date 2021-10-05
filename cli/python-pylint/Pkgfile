@@ -1,19 +1,18 @@
 description="Analyzes Python code looking for bugs and signs of poor quality."
 url="http://pylint.org"
 
-packager="tnut <tnut@nutyx.org>"
+packager="spiky <spiky@nutyx.org>"
 
 makedepends=(git python-astroid python-six)
 
 alias=(pylint)
 
 name=python-pylint
-version=2.3.1
-release=2
+version=2.11.1
 
-source=(https://github.com/PyCQA/pylint/archive/pylint-$version.tar.gz)
+source=(https://github.com/PyCQA/pylint/archive/refs/tags/v${version}.tar.gz)
 build() {
-    cd pylint-pylint-$version
+    cd pylint-$version
     python3 setup.py check
     python3 setup.py install --prefix=/usr --root=$PKG
 }
