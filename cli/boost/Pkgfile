@@ -1,23 +1,24 @@
 description="Boost provides a set of free peer-reviewed portable C++ source libraries."
 url="http://boost.sourceforge.net/"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Rems"
+packager="spiky <spiky@nutyx.org>"
+contributors="Rems, tnut"
 
-makedepends=(icu python python2)
+makedepends=(icu python)
 
 name=boost
-version=1.72.0
+version=1.76.0
 
-source=(https://dl.bintray.com/boostorg/release/$version/source/${name}_${version//./_}.tar.bz2)
+source=(https://boostorg.jfrog.io/artifactory/main/release/$version/source/${name}_${version//./_}.tar.bz2)
 
 build() {
 cd ${name}_${version//./_}
-local ICU=$([ -e /usr/bin/icu-config ] && echo --with-icu)
-./bootstrap.sh --prefix=$PKG/usr --with-toolset=gcc $ICU
 
-./b2 stage variant=release threading=multi \
+./bootstrap.sh --prefix=$PKG/usr --with-toolset=gcc --with-python=python3
+
+./b2 stage -j8 variant=release threading=multi \
 	link=shared,static debug-symbols=off -j ${JOBS-1}
 
 ./b2 install threading=multi link=shared
+ln -svf detail/sha1.hpp $PKG/usr/include/boost/uuid/sha1.hpp
 }
