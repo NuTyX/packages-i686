@@ -1,23 +1,33 @@
 description="The GLib package contains a low-level libraries useful for providing data structure handling"
 url="http://www.gtk.org/"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Tnut, Fanch"
+packager="spiky <spiky@nutyx.org>"
+contributors="Fanch,Tnut"
 
 makedepends=(libffi pcre python elfutils meson ninja libxslt docbook-xsl)
 PKGMK_GROUPS=(man devel doc )
 
 name=glib
-version=2.64.5
+version=2.70.0
 
 source=(https://download.gnome.org/sources/glib/${version:0:4}/$name-$version.tar.xz
-	https://download.tuxfamily.org/nutyx/WallPapers/nutyx-11.0.jpg
-	glib-skip_warnings-1.patch)
-
+	glib-skip_warnings-2.patch)
+prepare () {
+  URL="http://downloads.tuxfamily.org/nutyx/WallPapers"
+  for i in nutyx-12-beta2.jpg nutyx-21-red.jpg nutyx-21-green.jpg \
+  nutyx-black.jpg nutyx-dreamy-sky.jpg lxde-black.jpg nutyx-10.0.jpg \
+  nutyx-11.0.jpg nutyx-9.0.94.jpg nutyx-9.0.95.jpg nutyx-eagle.jpg \
+  nutyx2.png nutyx9.png NuTyX-vide.jpg NuTyX-LXDE-10.0.jpg NuTyX-9.92.jpg \
+  NuTyX-9.91-2.jpg NuTyX-bad-jocker.jpg
+  do
+   wget $URL/$i
+   install -D -m644 $i $PKG/usr/share/backgrounds/nutyx/$i
+  done
+}
 build () {
   cd $name-$version
 
-  patch -Np1 -i ../glib-skip_warnings-1.patch
+  patch -Np1 -i ../glib-skip_warnings-2.patch
 
   mkdir build-glib
   cd    build-glib
@@ -29,8 +39,8 @@ build () {
 
 
   # Default NuTyX Wallpaper
-  install -D -m644 ../../nutyx-11.0.jpg \
-  $PKG/usr/share/backgrounds/nutyx/nutyx.jpg
+  ln -sv nutyx-21-red.jpg $PKG/usr/share/backgrounds/nutyx/nutyx.jpg
+
 
 }
 uptodate(){
