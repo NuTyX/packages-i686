@@ -1,15 +1,16 @@
-description="The Rust programming language is designed to be a safe, concurrent, practical language."
+description="The Rust programming language is designed to be a safe, \
+concurrent, practical language."
 url="http://static.rust-lang.org/"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Pierre B., Rémy"
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre.,Rémy,Tnut"
 
-makedepends=(cmake curl llvm python libedit libssh)
+makedepends=(make-ca cmake curl llvm python libssh2)
 
 name=rustc
-version=1.42.0
+version=1.55.0
 
-source="http://static.rust-lang.org/dist/$name-$version-src.tar.gz"
+source=(http://static.rust-lang.org/dist/$name-$version-src.tar.gz)
 
 build() {
    cd $name-$version-src
@@ -18,6 +19,9 @@ build() {
 [llvm]
 # by default, rust will build for a myriad of architectures
 targets = "X86"
+
+# When using system llvm prefer shared libraries
+link-shared = true
 
 [build]
 # omit HTML docs to save time and space (comment this to build them)
@@ -28,7 +32,7 @@ extended = true
 
 [install]
 prefix = "/usr"
-docdir = "share/doc/rustc-1.42.0"
+docdir = "share/doc/rustc-1.55.0"
 
 [rust]
 channel = "stable"
@@ -51,7 +55,7 @@ llvm-config = "/usr/bin/llvm-config"
 EOF
 
   export RUSTFLAGS="$RUSTFLAGS -C link-args=-lffi"
-  python3 ./x.py build
+  python3 ./x.py build --exclude src/tools/miri
   export LIBSSH2_SYS_USE_PKG_CONFIG=1 
   DESTDIR=$PKG python3 ./x.py install
 
