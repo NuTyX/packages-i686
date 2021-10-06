@@ -1,0 +1,26 @@
+description="Cross-platform 3D audio."
+url="http://connect.creativelabs.com/openal"
+
+maintainer="Danny Rawlins, monster dot romster at gmail dot com"
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre"
+
+makedepends=(alsa-lib cmake)
+
+name=openal
+version=1.21.1
+
+source=(https://github.com/kcat/openal-soft/archive/$version.tar.gz)
+
+build() {
+cd $name-soft-$version/build
+
+cmake ../ \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DOSS=OFF \
+	-DEXAMPLES=OFF \
+	-DCMAKE_BUILD_TYPE=Release #-DCMAKE_VERBOSE_MAKEFILE=true
+
+make
+make DESTDIR=$PKG install
+}
