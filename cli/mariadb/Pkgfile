@@ -1,18 +1,19 @@
 description="MariaDB is a fork and a replacement for the MySQL relational database management system."
 url="http://www.mariadb.org/en/about/"
 
-packager="tnut <tnu@nutyx.org>"
-contributors="Pierre B"
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre,Tnut"
 
 makedepends=(lzo cmake libevent boost libxml2 cracklib pcre ruby libaio openssl)
+run=(shadow)
 
 name=mariadb
-version=10.5.5
+version=10.6.4
 
-runyx_version=20200412
+runyx_version=20201011
 
 source=(https://downloads.tuxfamily.org/nutyx/files/runyx-${runyx_version}.tar.xz
-	ftp://ftp.osuosl.org/pub/mariadb/$name-$version/source/$name-$version.tar.gz)
+	https://downloads.mariadb.org/interstitial/$name-$version/source/$name-$version.tar.gz)
 PKGMK_GROUPS=(devel lib man doc service)
 
 prepare() {
@@ -144,4 +145,3 @@ $PKGMK_PACKAGE_DIR/${name}.${group}${PKGMK_BUILDVER}any.${PKGMK_PACKAGE_EXT} \
 etc/rc.d etc/init lib/init lib/systemd
 rm -r etc/rc.d etc/init lib/init lib/systemd
 }
-
