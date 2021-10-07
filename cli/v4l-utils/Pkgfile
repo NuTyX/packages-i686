@@ -4,17 +4,17 @@ url="http://freshmeat.net/projects/libv4l"
 packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
 
-makedepends=(libjpeg-turbo2 alsa-lib doxygen)
+makedepends=(llvm libjpeg-turbo alsa-lib)
 
 name=v4l-utils
-version=1.16.7
+version=1.20.0
 
 source=(http://linuxtv.org/downloads/v4l-utils/$name-$version.tar.bz2)
 
 build() {
 	cd $name-$version
 	./configure --prefix=/usr \
-	--sysconfdir=/etc/$name
+	--sysconfdir=/etc/$name --disable-bpf
 	 MAKEFLAGS="-j1" make install DESTDIR=$PKG
 
 	rm -f $PKG/usr/bin/ivtv-ctl
