@@ -2,17 +2,16 @@ description="Python Imaging Library"
 url="https://pypi.python.org/pypi/Pillow"
 
 maintainer="https://github.com/python-pillow/Pillow/releases.atom"
-packager="tnut <tnut@nutyx.org>"
-contributors="hugo, Rémy"
+packager="spiky <spiky@nutyx.org>"
+contributors="hugo, Rémy, tnut"
 
-makedepends=(lcms2 libtiff freetype openjpeg2 libwebp)
+makedepends=(lcms2 libtiff freetype openjpeg libwebp)
 run=(python)
 
 name=python-pillow
-version=6.1.0
-release=2
+version=8.3.2
 
-source=(https://files.pythonhosted.org/packages/source/P/Pillow/Pillow-$version.tar.gz)
+source=(https://files.pythonhosted.org/packages/90/d4/a7c9b6c5d176654aa3dbccbfd0be4fd3a263355dc24122a5f1937bdc2689/Pillow-$version.tar.gz)
 
 build(){
 cd Pillow-$version
