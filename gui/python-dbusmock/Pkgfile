@@ -1,0 +1,18 @@
+description="Python library useful for writing tests for software which talks to D-Bus services."
+url="https://github.com/martinpitt/python-dbusmock"
+
+packager="spiky <spiky@nutyx.org>"
+
+run=(python-dbus python-gobject)
+makedepends=(python)
+
+name=python-dbusmock
+version=0.23.1
+
+source=(https://github.com/martinpitt/python-dbusmock/releases/download/$version/python-dbusmock-$version.tar.gz)
+
+build() {
+cd $name-$version
+python3 setup.py build
+python3 setup.py install --root=$PKG --optimize=1
+}
