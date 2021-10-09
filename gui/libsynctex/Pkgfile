@@ -4,18 +4,26 @@ url="https://tug.org/texlive/"
 packager="tnut <tnut@nutyx.org>"
 contributors=""
 
-makedepends=(cairo icu xorg-pixman xorg-libxaw)
+makedepends=(gmp mpfr cairo icu xorg-pixman xorg-libxaw)
 
 name=libsynctex
-version=20200406
+version=20210325
 
-source=(ftp://tug.org/texlive/historic/2020/texlive-$version-source.tar.xz)
+source=(http://www.linuxfromscratch.org/patches/blfs/svn/texlive-$version-upstream_fixes-1.patch
+        ftp://tug.org/texlive/historic/2021/texlive-$version-source.tar.xz)
+
+prepare() {
+cd texlive-$version-source
+export TEXARCH=$(uname -m |
+ sed -e 's/i.86/i386/' -e 's/$/-linux/')
+
+patch -Np1 -i ../texlive-$version-upstream_fixes-1.patch
+mkdir build
+}
+
 
 build() {
-cd texlive-$version-source
-mkdir build
-cd    build
-
+cd texlive-$version-source/build
 ../configure --prefix=/usr \
 --mandir=/usr/share/man \
 --infodir=/usr/share/info \
