@@ -1,17 +1,18 @@
 description="Provides a userspace library for accessing the DRM, direct rendering manager"
 url="http://xorg.freedesktop.org"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Pierre B, tnut"
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre B, tnut, tnut"
 
-makedepends=(meson docbook-xsl libxslt xorg-util-macros xorg-libpciaccess ninja)
+makedepends=(python meson docbook-xsl libxslt xorg-util-macros xorg-libpciaccess ninja)
 
 name=xorg-libdrm
 _name=libdrm
-version=2.4.102
+version=2.4.107
+
 alias=(libdrm)
 
-source=(https://dri.freedesktop.org/${_name}/${_name}-$version.tar.xz)
+source=(http://dri.freedesktop.org/${_name}/${_name}-$version.tar.xz)
 
 build() {
 
