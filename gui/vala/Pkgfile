@@ -1,25 +1,24 @@
 description="Programming language which bring news features of languages of programming modern to developers GNOME"
 url="http://live.gnome.org/Vala"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Pierre B, Rems"
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre B, Rems, tnut"
 
 makedepends=(glib graphviz libxslt help2man)
 
 name=vala
-version=0.48.9
-release=2
+version=0.54.1
 
-source=(https://download.gnome.org/sources/vala/${version%.*}/$name-$version.tar.xz)
+source=(https://download.gnome.org/sources/vala/${version:0:4}/$name-$version.tar.xz)
 
 package() {
 # Obsolets libs
 
-rm $PKG/usr/lib/libvala{,doc}-0.48.la
-rm $PKG/usr/lib/vala-0.48/libvalaccodegen.la
-rm $PKG/usr/lib/valadoc-0.48/doclets/html/libdoclet.la
-rm $PKG/usr/lib/valadoc-0.48/doclets/gtkdoc/libdoclet.la
-rm $PKG/usr/lib/valadoc-0.48/doclets/devhelp/libdoclet.la
+rm $PKG/usr/lib/libvala{,doc}-0.54.la
+rm $PKG/usr/lib/vala-0.54/libvalaccodegen.la
+rm $PKG/usr/lib/valadoc-0.54/doclets/html/libdoclet.la
+rm $PKG/usr/lib/valadoc-0.54/doclets/gtkdoc/libdoclet.la
+rm $PKG/usr/lib/valadoc-0.54/doclets/devhelp/libdoclet.la
 }
 
 uptodate(){
