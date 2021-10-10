@@ -1,24 +1,24 @@
 description="Graphviz is open source graph visualization software"
 url="http://www.graphviz.org"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Pierre B, Tnut, Rems"
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre B, Tnut, Rems, tnut"
 
-makedepends=(gtk2 freetype xorg-fontconfig gdk-pixbuf libjpeg-turbo2
+makedepends=(gtk2 freetype xorg-fontconfig gdk-pixbuf libjpeg-turbo
              libpng pango libglade ghostscript swig guile openjdk
              lua python ruby tcl tk)
 
 name=graphviz
-version=2.42.3
+version=2.49.1
 
-source=(https://www2.graphviz.org/Packages/stable/portable_source//$name-$version.tar.gz)
+source=(https://gitlab.com/graphviz/graphviz/-/archive/$version/$name-$version.tar.gz)
 
 build () {
   cd $name-$version
 
   sed -i '/LIBPOSTFIX="64"/s/64//' configure.ac
 
-  autoreconf
+  ./autogen.sh NOCONFIG
   ./configure --prefix=/usr --disable-php
   make	
   make DESTDIR=$PKG install
@@ -56,7 +56,6 @@ rm $PKG/usr/lib/tcl8.6/graphviz/libtcldot.la
 rm $PKG/usr/lib/tcl8.6/graphviz/libtcldot_builtin.la
 rm $PKG/usr/lib/tcl8.6/graphviz/libtclplan.la
 rm $PKG/usr/lib/graphviz/libgvplugin_visio.la
-rm $PKG/usr/lib/graphviz/python2/libgv_python2.la
 rm $PKG/usr/lib/graphviz/python3/libgv_python3.la
 
 }
