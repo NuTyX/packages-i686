@@ -1,17 +1,16 @@
 description="Complete and free implementation of the OpenPGP standard"
 url="http://www.gnupg.org/"
 
-packager="tnut <tnut2nutyx.org>"
-contributors="Pierre B"
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre,Tnut"
 
-makedepends=(npth libgpg-error libgcrypt libassuan libksba
+makedepends=(texinfo npth libgpg-error libgcrypt libassuan libksba
              openldap libusb-compat curl)
 run=(pinentry)
 
 
 name=gnupg
-version=2.2.22
-release=3
+version=2.2.29
 
 source=(https://gnupg.org/ftp/gcrypt/gnupg/gnupg-$version.tar.bz2)
 
