@@ -1,49 +1,69 @@
 description="Tools which simplify and make the network more directly manageable."
 url="http://projects.gnome.org/NetworkManager/"
-packager="tnut <tnut@nutyx.org>"
-contributors="Pierre B, tnut, Greg"
+
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre,Greg,Rems,Tnut"
 
 makedepends=(libndp libsoup libgudev dbus-glib iptables libnl
-             nss wireless-tools polkit upower vala
-             wpa-supplicant-dbus gobject-introspection
-             newt dhcpcd python2-gobject)
-run=(wpa-supplicant wpa-supplicant-dbus)
+             nss wireless-tools polkit upower vala grep
+             gobject-introspection newt python
+             python-gobject gtk-doc meson ninja)
+run=(wpa-supplicant)
 
 alias=(NetworkManager)
 
 _name=NetworkManager
 
 name=networkmanager
-version=1.16.0
-release=2
+version=1.32.12
 
-source=(http://ftp.gnome.org/pub/gnome/sources/$_name/${version:0:4}/$_name-$version.tar.xz)
+runyx_version=20201011
+
+source=(http://download.tuxfamily.org/nutyx/files/runyx-${runyx_version}.tar.xz
+	https://download.gnome.org/sources/$_name/${version:0:4}/$_name-$version.tar.xz)
 
 build() {
 
-cd ${_name}-$version
-sed -i 's/1,12,2/1,12.2/' libnm-core/nm-version.h
-CXXFLAGS+=" -fPIC"
-./configure --prefix=/usr \
---sysconfdir=/etc \
---localstatedir=/var \
---with-nmtui \
---with-libnm-glib   \
---disable-gtk-doc \
---disable-gtk-doc-html \
---with-systemdsystemunitdir=no \
---disable-json-validation \
---disable-ovs \
---disable-ppp \
---docdir=/usr/share/doc/$name-$version
-make
-make DESTDIR=$PKG install
+mkdir build && cd build
 
+CXXFLAGS+="-02 -fPIC"            \
+meson --prefix        /usr       \
+      -Dudev_dir=/lib/udev       \
+      -Dsession_tracking=elogind \
+      -Dsession_tracking="no"    \
+      -Dlibaudit=no              \
+      -Dlibpsl=false             \
+      -Dnmtui=true               \
+      -Dselinux=false            \
+      -Djson_validation=false    \
+      -Dqt=false                 \
+      -Dovs=false                \
+      -Dppp=false                \
+      -Dmodem_manager=false      \
+      -Ddocs=true                \
+      -Dsystemdsystemunitdir=/lib/systemd/system \
+      ../${_name}-$version
+ninja
+DESTDIR=$PKG ninja install
+
+mv $PKG/usr/share/doc/NetworkManager{,-$version}
 # create a VPN directory
 install -d $PKG/etc/$_name/VPN
-install -m755 clients/.libs/nm-online -D $PKG/usr/bin/nm-online
+
 # create keyfile plugin system-settings directory
-install -d $PKG/etc/$_name/system-connections
+install -d $PKG/etc/${_name}/system-connections
+
+# Minimum config to make NetworkManager working
+cat >> $PKG/etc/${_name}/${_name}.conf << "EOF"
+[main]
+plugins=keyfile
+EOF
+
+# Allow polkit to manage authorizations
+cat > $PKG/etc/${_name}/conf.d/polkit.conf << "EOF"
+[main]
+auth-polkit=true
+EOF
 
 mkdir -p $PKG/usr/share/polkit-1/rules.d
 cat > $PKG/usr/share/polkit-1/rules.d/org.freedesktop.NetworkManager.rules << "EOF"
@@ -53,18 +73,15 @@ polkit.addRule(function(action, subject) {
     }
 });
 EOF
-# Obsolets libs
-rm $PKG/usr/lib/NetworkManager/$version/libnm-device-plugin-adsl.la
-rm $PKG/usr/lib/NetworkManager/$version/libnm-device-plugin-wifi.la
-rm $PKG/usr/lib/libnm-glib-vpn.la
-rm $PKG/usr/lib/libnm-glib.la
-rm $PKG/usr/lib/libnm-util.la
-rm $PKG/usr/lib/libnm.la
+
+# Runit service
+cd ../runyx-${runyx_version}
+make DESTDIR=$PKG install-runyx-networkmanager
 }
 
 uptodate(){
 local latest lastversion url
-url="http://ftp.gnome.org/pub/gnome/sources/${_name}"
+url="https://download.gnome.org/sources/${_name}"
 latest="`lynx -read_timeout=20 -dump -listonly -nonumbers \
 $url/?C=N\;O=D|grep [0-9]/$|head -1`"
 lastversion="`lynx -read_timeout=20 -dump -listonly -nonumbers \
