@@ -1,16 +1,25 @@
 description="Semantic data storage"
 url="http://www.gnome.org"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Jayce"
+packager="spiky <spiky@nutyx.org>"
+contributors="Jayce, Spiky, tnut"
 
 makedepends=(meson ninja json-glib icu networkmanager python
-             sqlite upower libsoup vala gtk-doc libseccomp)
+             sqlite upower libsoup vala gtk-doc libseccomp asciidoc)
 run=(desktop-file-utils gtk-update-icon-cache)
 
 name=tracker
-version=2.3.4
+version=3.2.0
 
 source=(https://download.gnome.org/sources/$name/${version:0:3}/$name-$version.tar.xz)
 
-build=meson
+build() {
+    mkdir build
+    cd    build
+    meson --prefix=/usr \
+    -Ddocs=false        \
+    ../$name-$version
+    ninja
+    DESTDIR=$PKG ninja install
+
+}
