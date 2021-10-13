@@ -1,14 +1,15 @@
 description="IBus is an Intelligent Input Bus."
 url="http://ibus.googlecode.com"
-packager="tnut <tnut@nutyx.org>"
 
-name=ibus
-version=1.5.20
+packager="spiky <spiky@nutyx.org>"
+contributor="Tnut"
+
 makedepends=(dconf iso-codes gobject-introspection gtk2
              libnotify vala python python-gobject
-             libxkbcommon dbus-python python2-xdg)
+             libxkbcommon dbus-python)
 
-
+name=ibus
+version=1.5.25
 
 source=(https://github.com/ibus/ibus/releases/download/$version/$name-$version.tar.gz)
 
@@ -22,7 +23,10 @@ sed -i 's@/desktop/ibus@/org/freedesktop/ibus@g' \
             --sysconfdir=/etc       \
             --enable-gtk-doc        \
             --disable-emoji-dict    \
-            --disable-unicode-dict
+            --disable-unicode-dict  \
+            --disable-python2       \
+            --with-python=python3
+
 rm -f tools/main.c
 make
 make DESTDIR=$PKG install
