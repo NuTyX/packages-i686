@@ -1,0 +1,27 @@
+description="A simple, fast, cross-platform, and object-oriented multimedia API"
+url="http://www.sfml-dev.org/"
+
+packager="tnut <tnut@nutyx.org>"
+contributors="Spiky"
+
+makedepends=(mesa cmake doxygen systemd libsndfile xorg-xrandr openal glew freetype xorg-libx11)
+
+name=sfml
+version=2.5.1
+release=2
+
+PKGMK_KEEP_SOURCES="no"
+
+source=(https://github.com/SFML/SFML/archive/$version.tar.gz)
+
+build() {
+cd SFML-$version
+mkdir build && cd build
+  cmake .. \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DSFML_USE_SYSTEM_DEPS=ON \
+      -DSFML_BUILD_EXAMPLES=1 \
+      -DSFML_BUILD_DOC=1 \
+      -DSFML_INSTALL_PKGCONFIG_FILES=1
+make DESTDIR=$PKG install
+}
