@@ -1,14 +1,27 @@
 description="Gtk greeter for lightdm"
 url="https://en.wikipedia.org/wiki/LightDM"
+
 packager="tnut <tnut@nutyx.org>"
 contributor="Rems, Dania"
 
+set=(lightdm)
+
+makedepends=(autoconf automake m4 xfce4-dev-tools
+             lightdm exo gobject-introspection)
+
+
 name=lightdm-gtk-greeter
-version=2.0.6
-release=3
+version=2.0.8
+
 makedepends=(lightdm exo gobject-introspection)
 
-source=(https://launchpad.net/lightdm-gtk-greeter/"${version:0:3}"/$version/+download/$name-$version.tar.gz)
+source=(https://github.com/Xubuntu/lightdm-gtk-greeter/archive/lightdm-gtk-greeter-$version.tar.gz)
+
+prepare() {
+mv $name-$name-$version $name-$version
+cd $name-$version
+NOCONFIGURE=1 ./autogen.sh
+}
 
 build() {
 
