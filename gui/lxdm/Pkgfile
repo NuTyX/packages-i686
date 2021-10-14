@@ -4,19 +4,20 @@ url="http://wiki.lxde.org/en/LXDM"
 maintainer="dgod dot osa at gmail dot com"
 packager="tnut <tnut@nutyx.org>"
 
-makedepends=(iso-codes librsvg xorg-libxinerama xorg-libxrandr
-             xorg-libxcursor xorg-libxdamage gtk2 consolekit2
-             xorg-xinit)
-run=(consolekit2 librsvg xorg-xinit)
+makedepends=(pam iso-codes xorg-libxinerama xorg-libxrandr
+             xorg-libxcursor xorg-libxdamage gtk2)
+run=(librsvg xorg-xinit)
 
 PKGMK_GROUPS=()
 
 name=lxdm
 version=0.5.3
-release=26
+release=30
 
+runyx_version=20201011
 source=(lxdm-$version-nutyx-1.patch login.png
-	http://downloads.tuxfamily.org/nutyx/files/lxdm-nutyx-11.0.jpg
+	https://downloads.tuxfamily.org/nutyx/files/runyx-${runyx_version}.tar.xz
+	http://downloads.tuxfamily.org/nutyx/files/lxdm-nutyx-12-beta3.jpg
 	http://downloads.sourceforge.net/$name/$name-$version.tar.xz)
 
 build() {
@@ -28,6 +29,7 @@ cat > pam/lxdm << "EOF"
 
 auth     requisite      pam_nologin.so
 auth     required       pam_env.so
+auth     required       pam_succeed_if.so uid >= 1000 quiet
 auth     include        system-auth
 
 account  include        system-account
@@ -43,7 +45,7 @@ EOF
 ./configure --sysconfdir=/etc \
 	--prefix=/usr \
 	--with-pam \
-	--with-systemdsystemunitdir=no
+	--with-systemdsystemunitdir=/lib/systemd/system
 
 make
   
@@ -54,24 +56,15 @@ do
    $PKG/usr/share/lxdm/themes/Industrial/$i
 done
 
-cp ../lxdm-nutyx-11.0.jpg \
+cp ../lxdm-nutyx-12-beta3.jpg \
 $PKG/usr/share/lxdm/themes/Industrial/nutyx.jpg
 
 # lxdm.conf created in post if needed
 # Let keep it as an example
 mv $PKG/etc/lxdm/lxdm.conf{,.example}
 
-#
-# runit:
-# TODO: need to find a more generic solution
-# like a function in pkgmk script
-#
-SERVICEDIR=lib/init/services/${name}
-mkdir -p $PKG/$SERVICEDIR
-
-cat > $PKG/$SERVICEDIR/run << "EOF"
-#!/bin/sh
-exec chpst -P /usr/sbin/lxdm
-EOF
-chmod 755 $PKG/$SERVICEDIR/run
+# service
+cd ../runyx-${runyx_version}
+make DESTDIR=$PKG install-runyx-$name
+sed -i '/agetty/d' $PKG/lib/init/services/lxdm/run
 }
