@@ -1,0 +1,12 @@
+description="Addons to QtGui "
+url="https://www.kde.org/"
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre B, tnut, fabienwang, spiky, fabienwang"
+
+name=kguiaddons
+version=5.86.0
+makedepends=(extra-cmake-modules qtx11extras qtwayland)
+
+source=(https://download.kde.org/stable/frameworks/${version%.*}/${name}-$version.tar.xz)
+
+build=kde5
