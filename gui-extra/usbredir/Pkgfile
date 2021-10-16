@@ -1,12 +1,14 @@
 description="USB traffic redirection protocol"
 url="http://spice-space.org/page/UsbRedir"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Fanch"
+packager="spiky <spiky@nutyx.org>"
+contributors="Fanch, tnut"
 
-makedepends=(libusb)
+makedepends=(libusb glib)
 
 name=usbredir
-version=0.8.0
+version=0.11.0
 
-source=(http://spice-space.org/download/usbredir/$name-$version.tar.bz2)
+source=(http://spice-space.org/download/usbredir/$name-$version.tar.xz)
+
+build=meson
