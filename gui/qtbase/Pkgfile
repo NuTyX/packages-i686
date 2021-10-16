@@ -5,7 +5,9 @@ packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B, Rems"
 
 name=qtbase
-version=5.14.2
+version=5.15.2
+release=2
+
 makedepends=(git xorgproto xorg-libxkbfile xorg-xtrans xorg-libx11 xorg-libxext
              xorg-libfs xorg-libice xorg-libsm xcb-proto libxcb xcb-util-keysyms
              xcb-util-renderutil xcb-util xcb-util-image xcb-util-wm xcb-util-cursor
@@ -16,7 +18,7 @@ makedepends=(git xorgproto xorg-libxkbfile xorg-xtrans xorg-libx11 xorg-libxext
              postgresql cups python gperf ruby pulseaudio bluez libtiff libmng openal
              libxslt xorg-libxcomposite gstreamer gstreamer-plugins-base
              gstreamer-plugins-good gstreamer-plugins-bad pulseaudio hunspell
-             wayland ca-certificates pcre gtk2 gtk3 libxkbcommon nss pciutils freetype)
+             wayland pcre gtk2 gtk3 libxkbcommon nss pciutils freetype)
 
 
 
@@ -27,6 +29,10 @@ source=(https://download.qt.io/official_releases/qt/${version:0:4}/$version/subm
 build() {
 
 cd ${_name}-${version}
+
+sed -i '/utility/a #include <limits>'     src/corelib/global/qglobal.h
+sed -i '/string/a #include <limits>'      src/corelib/global/qfloat16.h
+sed -i '/qbytearray/a #include <limits>'  src/corelib/text/qbytearraymatcher.h
 
 ./configure -prefix         /usr                        \
             -sysconfdir     /etc/xdg                    \
@@ -55,11 +61,11 @@ cd ${_name}-${version}
             -system-zlib        \
             -system-libjpeg     \
             -system-libpng      \
-            -system-xcb         \
             -system-harfbuzz    \
             -system-sqlite      \
             -system-freetype    \
-	    -no-rpath
+            -no-rpath
+
 make
 make INSTALL_ROOT=$PKG install
 
