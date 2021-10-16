@@ -5,7 +5,8 @@ packager="tnut <tnut@nutyx.org>"
 contributors="Pierre B"
 
 name=qt3d
-version=5.14.2
+version=5.15.2
+release=2
 makedepends=(qtdeclarative assimp)
 
 _name="${name}-everywhere-src"
