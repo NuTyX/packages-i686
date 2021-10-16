@@ -1,0 +1,23 @@
+description="Qt 5 addon providing access to numerous types of archives "
+url="https://www.kde.org/"
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre B, tnut, fabienwang, spiky, fabienwang"
+
+name=karchive
+version=5.86.0
+makedepends=(extra-cmake-modules qtbase bzip2 xz zlib)
+source=(https://download.kde.org/stable/frameworks/${version%.*}/${name}-$version.tar.xz)
+
+build=kde5
+
+uptodate() {
+feed=https://github.com/KDE/$name/releases.atom 
+exec="lynx -read_timeout=20 -dump -listonly -nonumbers $feed"
+ligne=1 # nombre de notification ? afficher
+$exec $feed | grep title | \
+sed "s@<title>@@" | \
+sed "s@</title>@@" | \
+sed "s@v@@" | \
+head -n $(($ligne+1 )) | \
+tail -n $(($ligne))
+}
