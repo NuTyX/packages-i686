@@ -1,18 +1,19 @@
 description="A free source code editing component for Win32, GTK+, and OS X"
 url="http://scintilla.org/"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Renaud C., Greg"
+packager="spiky <spiky@nutyx.org>"
+contributors="Renaud,C.,Greg,Tnut"
 
 makedepends=(setconf gtk3)
 
 name=scite
-version=4.2.1
+version=5.1.4
 
 source=(http://downloads.sourceforge.net/sourceforge/scintilla/${name}${version//./}.tgz)
 
 
 build() {
+  make -C lexilla/src
   GTK3=1 make -C scintilla/gtk
   GTK3=1 make -C $name/gtk
 }
