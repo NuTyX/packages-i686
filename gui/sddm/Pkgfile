@@ -1,0 +1,75 @@
+description="QML based X11 and Wayland display manager"
+url="https://www.kde.org/"
+
+packager="tnut <tnut@nutyx.org>"
+
+makedepends=(python-docutils qttools qtdeclarative extra-cmake-modules)
+run=(elogind xorg-xauth xorg-server xorg-xinit)
+
+set=(kde5)
+
+name=sddm
+version=0.19.0
+release=3
+
+PKGMK_KEEP_SOURCES="no"
+
+source=(sdm-0.19.0-consolidate-1.patch
+	https://github.com/$name/$name/archive/v$version.tar.gz)
+
+prepare() {
+groupadd -g 64 sddm
+useradd -c "Simple Desktop Display manager" \
+-d /var/lib/sddm \
+-u 64 -g sddm \
+-s /sbin/false sddm
+}
+
+build() {
+cd $name-$version
+patch -Np1 -i ../sdm-0.19.0-consolidate-1.patch
+
+mkdir build
+cd    build
+cmake -DCMAKE_INSTALL_PREFIX=/usr             \
+      -DCMAKE_BUILD_TYPE=Release              \
+      -DDBUS_CONFIG_FILENAME=sddm_org.freedesktop.DisplayManager.conf \
+      -DKDE_INSTALL_LIBEXECDIR=/usr/lib/$name      \
+      -DDBUS_CONFIG_DIR=/usr/share/dbus-1/system.d \
+      -DBUILD_TESTING=OFF  \
+      -DBUILD_MAN_PAGES=ON \
+      -Wno-dev ..
+make
+make DESTDIR=$PKG install
+
+sed -i "s@system-local-login@system-login@" $PKG/etc/pam.d/sddm-autologin
+
+mkdir -p $PKG/var/lib/sddm
+chown -R sddm:sddm $PKG/var/lib/sddm
+chmod -R 0755 $PKG/var/lib/sddm
+
+# runyx service
+SERVICEDIR=lib/init/services/${name}
+mkdir -p $PKG/$SERVICEDIR
+cat > $PKG/$SERVICEDIR/run << "EOF"
+#!/bin/sh
+sv check dbus >/dev/null || exit 1
+
+exec /usr/bin/sddm
+EOF
+chmod 755 $PKG/$SERVICEDIR/run
+install -d -m 755 $PKG/etc/init/multi
+ln -sv /$SERVICEDIR $PKG/etc/init/multi/${name}
+}
+
+uptodate() {
+feed=https://github.com/KDE/$name/releases.atom 
+exec="lynx -read_timeout=20 -dump -listonly -nonumbers $feed"
+ligne=1 # nombre de notification ? afficher
+$exec $feed | grep title | \
+sed "s@<title>@@" | \
+sed "s@</title>@@" | \
+sed "s@v@@" | \
+head -n $(($ligne+1 )) | \
+tail -n $(($ligne))
+}
