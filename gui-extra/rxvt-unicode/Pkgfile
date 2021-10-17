@@ -2,13 +2,13 @@ description="An enhanced unicode capable version of the rxvt terminal emulator."
 url="http://software.schmorp.de/pkg/rxvt-unicode.html"
 
 packager="tnut <tnut@nutyx.org>"
-contributors="Alienus"
+contributors="Alienus,Spiky"
 
-makedepends=(gdk-pixbuf xorg-libxft)
+makedepends=(gdk-pixbuf perl xorg-libxt xorg-libxft libnsl startup-notification)
 run=(startup-notification)
 
 name=rxvt-unicode
-version=9.22
+version=9.26
 release=2
 
 source=(
