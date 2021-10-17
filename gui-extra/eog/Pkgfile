@@ -1,20 +1,20 @@
 description="Eye of Gnome: An image viewing and cataloging program"
 url="http://www.gnome.org/"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Fanch, Tnut, jayce, Remy"
+packager="spiky <spiky@nutyx.org>"
+contributors="Fanch,Tnut,Jayce,Remy,Fabienwang"
 
 makedepends=(gnome-desktop libpeas shared-mime-info yelp-xsl librsvg
              gnome-icon-theme exempi lcms2 libexif meson ninja
-             gobject-introspection)
+             gobject-introspection libportal)
 run=(adwaita-icon-theme gsettings-desktop-schemas
      desktop-file-utils gtk-update-icon-cache)
 
 set=(gnome)
 
 name=eog
-version=3.36.3
+version=40.3
 
-source=(https://download.gnome.org/sources/$name/${version:0:4}/$name-$version.tar.xz)
+source=(https://gitlab.gnome.org/GNOME/$name/-/archive/$version/$name-$version.tar.gz)
 
 build=meson
