@@ -1,27 +1,30 @@
 description="Text-based Web browser as well as pager"
 url="https://salsa.debian.org/debian/w3m"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Greg, Berlius"
+packager="fabienwang <fabienwang@nutyx.org>"
+contributors="tnut, Greg, Berlius"
 
-makedepends=(openssl gc ncurses gpm git imlib2)
+makedepends=(openssl gc ncurses gpm git imlib2 xorgproto)
 
 name=w3m
-version=0.5.3.git20180125
-release=2
+version=0.5.3+git20210102
+_releasetag=v0.5.3+git20210102+deb11u0.5
+release=1
 
-build(){
-    git clone https://salsa.debian.org/debian/w3m.git
-	cd "${SRC}/${name}"
+source=(https://salsa.debian.org/debian/w3m/-/archive/${_releasetag}/w3m-${_releasetag}.tar.gz)
+
+build() {
+	cd "${name}-${_releasetag}"
 	./configure \
 		--prefix=/usr \
 		--libexecdir=/usr/lib \
 		--enable-image=x11,fb \
 		--with-imagelib=imlib2 \
 		--with-termlib=ncurses \
-		--disable-w3mmailer \
+		--disable-w3mmailer
 
 	make
+
 	make DESTDIR="${PKG}" install
 
 	install -d "${PKG}"/usr/share/{doc,licenses}/w3m
