@@ -1,25 +1,19 @@
 description="Deletes unneeded files to free disk space and maintain privacy"
 url="http://bleachbit.sourceforge.net/"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Greg"
+packager="spiky <spiky@nutyx.org>"
+contributors="Tnut,Greg,Schrodinger72"
 
-run=(python2 python2-gtk desktop-file-utils gtk-update-icon-cache
+run=(python python-gobject python-chardet gtk3 desktop-file-utils
      hicolor-icon-theme)
 
 name=bleachbit
-version=1.19
+version=4.4.0
 
 PKGMK_KEEP_SOURCES="no"
-source=(https://github.com/bleachbit/bleachbit/archive/v$version.tar.gz)
+source=(https://github.com/bleachbit/bleachbit/archive/refs/tags/v${version}.tar.gz)
 
 build() {
-
-    cd $name-$version
-	for file in $(find . -name '*.py' -print); do
-        sed -i -e 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' \
-               -e 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' "$file"
-    done
-    sed -i 's/python/python2/g' Makefile
-    make prefix=/usr DESTDIR=$PKG PYTHON=python2 install   
+  cd $name-$version
+  make prefix=/usr DESTDIR=$PKG PYTHON=python3 install
 }
