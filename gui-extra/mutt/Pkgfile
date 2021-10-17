@@ -1,14 +1,15 @@
 description="MailUserAgent, useful for reading, writing, replying to, saving, and deleting your email."
 url="http://www.mutt.org/"
 
-packager="tnut <tnut@nutyx.org>"
+packager="spiky <spiky@nutyx.org>"
 contributors="Berlius, Tnut, Greg"
 
-makedepends=(aspell aspell-dict cyrus-sasl gdb gnupg gpgme libidn kerberos
-             sendmail slang openssl gnutls db libxslt lynx)
+makedepends=(aspell aspell-dict cyrus-sasl gdb gnupg gpgme libidn
+             kerberos sendmail slang openssl gnutls db libxslt lynx)
+run=(shadow)
 
 name=mutt
-version=1.13.4
+version=2.1.3
 
 source=(ftp://ftp.mutt.org/pub/mutt/$name-$version.tar.gz)
  
@@ -23,7 +24,9 @@ build() {
 
 cd $name-$version
 
-cp -v doc/manual.txt{,.shipped} 
+sed -i -e 's/ -with_backspaces//' -e 's/elinks/links/' \
+  -e 's/-no-numbering -no-references//' doc/Makefile.in
+
 ./configure --prefix=/usr     \
             --sysconfdir=/etc \
             --with-docdir=/usr/share/doc/mutt-$version \
@@ -36,8 +39,7 @@ cp -v doc/manual.txt{,.shipped}
             --with-ssl        \
             --without-bdb     \
             --with-sasl       \
-            --enable-smtp     \
-            --without-tokyocabinet 
+            --enable-smtp
 make
 
 make DESTDIR=$PKG install
