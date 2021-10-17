@@ -1,0 +1,11 @@
+description="QT wrapper for ModemManager DBus API"
+url="https://www.kde.org/"
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre B, tnut, fabienwang, spiky, fabienwang"
+
+name=modemmanager-qt
+version=5.86.0
+makedepends=(extra-cmake-modules kdoctools cmake qtbase qttools modemmanager doxygen)
+source=(https://download.kde.org/stable/frameworks/${version%.*}/${name}-$version.tar.xz)
+
+build=kde5
