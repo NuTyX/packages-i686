@@ -1,0 +1,15 @@
+description="Image format plugins for Qt5"
+url="https://www.kde.org/"
+
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre,Rems,Spiky,Fabienwang, tnut, fabienwang"
+
+makedepends=(extra-cmake-modules openexr karchive)
+
+name=kimageformats
+version=5.86.0
+release=3
+
+source=(https://download.kde.org/stable/frameworks/${version%.*}/$name-$version.tar.xz)
+
+build=kde5
