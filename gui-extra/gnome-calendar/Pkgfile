@@ -1,7 +1,7 @@
 description="GNOME calendar"
 url="http://www.gnome.org/"
 
-packager="tnut <tnut@nutyx.org>"
+packager="spiky <spiky@nutyx.org>"
 contributors="Tnut, jayce, Remy"
 
 makedepends=(libdazzle meson intltool libhandy
@@ -11,8 +11,8 @@ run=(gsettings-desktop-schemas desktop-file-utils gtk-update-icon-cache)
 set=(gnome)
 
 name=gnome-calendar
-version=3.36.0
+version=40.2
 
-source=(https://download.gnome.org/sources/${name}/${version:0:4}/${name}-$version.tar.xz)
+source=(https://download.gnome.org/sources/${name}/${version%.*}/${name}-$version.tar.xz)
 
 build=meson
