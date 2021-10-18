@@ -1,0 +1,31 @@
+description="Remote desktop client for Gnome"
+url="https://gnome.org"
+
+contributors="Remy"
+packager="tnut <tnut@nutyx.org>"
+
+makedepends=(gnome-common yelp yelp-tools yelp-xsl
+             docbook-xsl vte gnutls itstool gtk-vnc
+             itstool libsecret telepathy-glib vala
+             avahi appstream-glib)
+ 
+set=(gnome)
+
+name=vinagre
+version=3.22.0
+
+source=(http://ftp.gnome.org/pub/gnome/sources/vinagre/${version:0:4}/vinagre-$version.tar.xz)
+
+build() {
+cd $name-$version
+sed -e '/_VinagreVnc/i gboolean scaling_command_line;' \
+    -i plugins/vnc/vinagre-vnc-connection.c &&
+sed -e '/scaling_/s/^/extern /' \
+    -i plugins/vnc/vinagre-vnc-connection.h
+
+./configure --prefix=/usr \
+            --enable-compile-warnings=minimum
+  make
+  
+  make DESTDIR=$PKG install
+}
