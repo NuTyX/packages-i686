@@ -1,15 +1,14 @@
 description="GPS daemon and library to support USB/serial GPS devices"
 url="http://catb.org/gpsd/"
 
-packager="dania <dania@nutyx.org>"
+packager="spiky <spiky@nutyx.org>"
 contributors="Tnut"
 
 name=gpsd
-version=3.19
-release=4
-makedepends=(asciidoc bluez docbook-xsl gtk3 libusb python2 qtbase scons
-            python2-gobject python2-cairo python-gobject python-cairo)
-run=(python2)
+version=3.23.1
+makedepends=(tar asciidoc bluez docbook-xsl gtk3 libusb python qtbase scons
+             python-gobject python-cairo)
+run=(python)
 
 source=(http://download-mirror.savannah.gnu.org/releases/gpsd/gpsd-${version}.tar.gz)
 
@@ -42,7 +41,7 @@ USBAUTO="true"
 GPSD_SOCKET="/var/run/gpsd.sock"
 EOF
 
-install -Dm644 gpsd.rules $PKG/lib/udev/rules.d/25-gpsd-usb.rules
+install -Dm644 $name-$version/gpsd.rules $PKG/lib/udev/rules.d/25-gpsd-usb.rules
 install -Dm755 gpsd.hotplug $PKG/lib/udev/gpsd.hotplug
 
 sed -i "s@gps%n"@gps%n" , MODE="0666"@g" \
