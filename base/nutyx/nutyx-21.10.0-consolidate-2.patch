@@ -1,0 +1,13 @@
+diff --git a/scripts/install-nutyx.in b/scripts/install-nutyx.in
+index bfc7889..d740860 100755
+--- a/scripts/install-nutyx.in
++++ b/scripts/install-nutyx.in
+@@ -1639,7 +1639,7 @@ LABEL="nutyxcd"
+ [ "$(uname -m)" == "x86_64" ] &&  GRUB_EFI_ARCH="x86_64"
+ [ "$(uname -m)" == "i686" ] &&  GRUB_EFI_ARCH="i386"
+ [ "$(uname -m)" == "x86_64" ] && GRUB_EFI_IMG="bootx64.efi"
+-[ "$(uname -m)" == "i686" ] && GRUB_EFI_IMG="bootia32.efi"
++[ "$(uname -m)" == "i686" ] && GRUB_EFI_IMG="boot32.efi"
+ 
+ ISODIR=$LFS/ISO
+ SCRIPTDIR=$(pwd -P)
