@@ -1,0 +1,465 @@
+description="Standalone web browser from mozilla.org"
+url="http://www.mozilla.com/firefox/"
+
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre,Remy,Fabienwang,Tnut"
+
+categories=(Network WebBrowser)
+
+makedepends=(python node cbindgen libwebp nspr libevent rustc
+             dbus-glib autoconf2-13 libnotify yasm llvm)
+run=(pulseaudio icu sqlite libvpx nss gtk3 zip unzip
+     gstreamer gstreamer-plugins-base gstreamer-plugins-good
+     gstreamer-plugins-libav shared-mime-info)
+
+
+name=firefox
+version=93.0
+
+locale_version=$version
+
+source=(firefox.desktop disable_rust_test-1.patch fix-i386-fdlibm.patch
+	https://archive.mozilla.org/pub/firefox/releases/$version/source/$name-$version.source.tar.xz)
+
+pack_remove_locale() {
+
+wget  http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/${locale_version}/linux-$PKGMK_ARCH/xpi/${1}.xpi
+install -Dm644 ${1}.xpi \
+$PKG/usr/lib/firefox/browser/extensions/langpack-${1}@firefox.mozilla.org.xpi
+rm ${1}.xpi
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/${name}.${1}${PKGMK_BUILDVER}any.$PKGMK_PACKAGE_EXT \
+usr/lib/firefox/browser/extensions/langpack-${1}@firefox.mozilla.org.xpi
+
+rm usr/lib/firefox/browser/extensions/langpack-${1}@firefox.mozilla.org.xpi
+
+}
+
+build() {
+
+export CC=gcc
+export CXX=g++
+
+cd $name-$version
+
+# Locale autodetect
+sed -i '/intl.locale.matchOS/s/false/true/' modules/libpref/init/all.js
+
+cat > mozconfig << "EOF"
+# If you have a multicore machine, all cores will be used by default.
+# If desired, you can reduce the number of cores used, e.g. to 1, by
+# uncommenting the next line and setting a valid number of CPU cores.
+#mk_add_options MOZ_MAKE_FLAGS="-j1"
+
+# If you have installed dbus-glib, comment out this line:
+#ac_add_options --disable-dbus
+
+# If you have installed dbus-glib, and you have installed (or will install)
+# wireless-tools, and you wish to use geolocation web services, comment out
+# this line
+ac_add_options --disable-necko-wifi
+
+# API Keys for geolocation APIs - necko-wifi (above) is required for MLS
+# Uncomment the following line if you wish to use Mozilla Location Service
+#ac_add_options --with-mozilla-api-keyfile=$PWD/mozilla-key
+
+# Uncomment the following line if you wish to use Google's geolocaton API
+# (needed for use with saved maps with Google Maps)
+#ac_add_options --with-google-api-keyfile=$PWD/google-key
+
+# Uncomment these lines if you have installed optional dependencies:
+#ac_add_options --enable-system-hunspell
+#ac_add_options --enable-startup-notification
+
+# Choose PulseAudio or alsa: PulseAudio for now
+# ac_add_options --disable-pulseaudio
+# ac_add_options --enable-alsa
+
+# Comment out following options if you have not installed
+# recommended dependencies:
+#ac_add_options --enable-system-sqlite
+ac_add_options --with-system-libevent
+# fails to build against libvpx-1.8.0
+#ac_add_options --with-system-libvpx
+ac_add_options --with-system-nss
+ac_add_options --with-system-nspr
+ac_add_options --with-system-icu
+
+#  Do not specify the gold linker which is not the default. It will take
+# longer and use more disk space when debug symbols are disabled.
+
+# If you are going to apply the patch for system graphite
+# and system harfbuzz, uncomment these lines:
+#ac_add_options --with-system-graphite2
+#ac_add_options --with-system-harfbuzz
+
+# Stripping is now enabled by default.
+# Uncomment these lines if you need to run a debugger:
+#ac_add_options --disable-strip
+#ac_add_options --disable-install-strip
+
+# Disabling debug symbols makes the build much smaller and a little
+# faster. Comment this if you need to run a debugger.
+ac_add_options --disable-debug-symbols
+
+
+# The BLFS editors recommend not changing anything below this line:
+ac_add_options --prefix=/usr
+ac_add_options --enable-application=browser
+
+ac_add_options --disable-crashreporter
+ac_add_options --disable-updater
+ac_add_options --disable-tests
+
+# Optimization for size is broken with gcc7
+ac_add_options --enable-optimize
+
+
+ac_add_options --enable-official-branding
+
+# From firefox-61, system cairo is not supported
+ac_add_options --enable-system-ffi
+ac_add_options --enable-system-pixman
+
+# From firefox-62 --with-pthreads is not recognized
+
+ac_add_options --with-system-jpeg
+ac_add_options --with-system-png
+ac_add_options --with-system-zlib
+
+# The following option unsets Telemetry Reporting. With the Addons Fiasco,
+# Mozilla was found to be collecting user's data, including saved passwords and
+# web form data, without users consent. Mozilla was also found shipping updates
+# to systems without the user's knowledge or permission.
+# As a result of this, use the following command to permanently disable
+# telemetry reporting in Firefox.
+unset MOZ_TELEMETRY_REPORTING
+
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/firefox-build-dir
+EOF
+
+patch -Np1 -i ../disable_rust_test-1.patch
+patch -Np1 -i ../fix-i386-fdlibm.patch
+
+export MOZBUILD_STATE_PATH=${PWD}/mozbuild
+export MACH_USE_SYSTEM_PYTHON=1
+
+SHELL=/bin/sh ./mach configure
+SHELL=/bin/sh ./mach build
+
+mkdir -pv $PKG/usr/{bin,lib{,/mozilla/plugins}}
+
+SHELL=/bin/sh DESTDIR=$PKG ./mach install
+
+ln -svf ../mozilla/plugins $PKG/usr/lib/firefox/browser/
+
+# Need for gnash
+mkdir -p $PKG/usr/include/npapi
+cp -v dom/plugins/base/*.h $PKG/usr/include/npapi
+
+# Launcher
+mkdir -pv $PKG/usr/share/applications
+install -Dm644 $SRC/firefox.desktop $PKG/usr/share/applications/firefox.desktop
+
+mkdir -pv $PKG/usr/share/pixmaps
+ln -sf /usr/lib/firefox-$version/browser/icons/mozicon128.png $PKG/usr/share/pixmaps/firefox.png
+
+for i in 16 22 24 32 48 256
+do
+   mkdir -p $PKG/usr/share/icons/hicolor/${i}x${i}/apps
+   cp browser/branding/official/default${i}.png \
+      $PKG/usr/share/icons/hicolor/${i}x${i}/apps/firefox.png
+done
+
+mkdir -pv $PKG/usr/lib/firefox/browser/defaults/preferences
+cat > $PKG/usr/lib/firefox/browser/defaults/preferences/vendor.js << "EOF"
+// Use LANG environment variable to choose locale
+pref("intl.locale.requested", "");
+
+// Disable default browser checking.
+pref("browser.shell.checkDefaultBrowser", false);
+
+// Don't disable our bundled extensions in the application directory
+pref("extensions.autoDisableScopes", 11);
+pref("extensions.shownSelectionUI", true);
+EOF
+
+}
+locale_af()
+{
+pack_remove_locale af
+}
+locale_an()
+{
+pack_remove_locale an
+}
+locale_ar()
+{
+pack_remove_locale ar
+}
+locale_as()
+{
+pack_remove_locale as
+}
+locale_az()
+{
+pack_remove_locale az
+}
+locale_bg()
+{
+pack_remove_locale bg
+}
+locale_bs()
+{
+pack_remove_locale bs
+}
+locale_ca()
+{
+pack_remove_locale ca
+}
+locale_cs()
+{
+pack_remove_locale cs
+}
+locale_cy()
+{
+pack_remove_locale cy
+}
+locale_da()
+{
+pack_remove_locale da
+}
+locale_de()
+{
+pack_remove_locale de
+}
+locale_el()
+{
+pack_remove_locale el
+}
+locale_es()
+{
+for lang in es-AR es-CL es-ES es-MX
+do
+   wget  http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/${locale_version}/linux-$PKGMK_ARCH/xpi/$lang.xpi
+   install -Dm644 $lang.xpi \
+   $PKG/usr/lib/firefox/browser/extensions/langpack-$lang@firefox.mozilla.org.xpi
+   rm $lang.xpi
+done
+
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/${name}.es${PKGMK_BUILDVER}any.$PKGMK_PACKAGE_EXT \
+usr/lib/firefox/browser/extensions/langpack-es-AR@firefox.mozilla.org.xpi \
+usr/lib/firefox/browser/extensions/langpack-es-CL@firefox.mozilla.org.xpi \
+usr/lib/firefox/browser/extensions/langpack-es-ES@firefox.mozilla.org.xpi \
+usr/lib/firefox/browser/extensions/langpack-es-MX@firefox.mozilla.org.xpi
+
+rm usr/lib/firefox/browser/extensions/langpack-es-AR@firefox.mozilla.org.xpi
+rm usr/lib/firefox/browser/extensions/langpack-es-CL@firefox.mozilla.org.xpi
+rm usr/lib/firefox/browser/extensions/langpack-es-ES@firefox.mozilla.org.xpi
+rm usr/lib/firefox/browser/extensions/langpack-es-MX@firefox.mozilla.org.xpi
+}
+locale_et()
+{
+pack_remove_locale et
+}
+locale_fa()
+{
+pack_remove_locale fa
+}
+
+locale_ff()
+{
+pack_remove_locale ff
+}
+locale_fi()
+{
+pack_remove_locale fi
+}
+locale_fr()
+{
+pack_remove_locale fr
+}
+locale_ga()
+{
+lang=ga-IE
+wget  http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/${locale_version}/linux-$PKGMK_ARCH/xpi/$lang.xpi
+install -Dm644 $lang.xpi \
+$PKG/usr/lib/firefox/browser/extensions/langpack-$lang@firefox.mozilla.org.xpi
+rm $lang.xpi
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/${name}.ga${PKGMK_BUILDVER}any.$PKGMK_PACKAGE_EXT \
+usr/lib/firefox/browser/extensions/langpack-$lang@firefox.mozilla.org.xpi
+
+rm usr/lib/firefox/browser/extensions/langpack-$lang@firefox.mozilla.org.xpi
+}
+locale_gl()
+{
+pack_remove_locale gl
+}
+locale_hi()
+{
+lang=hi-IN
+wget  http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/${locale_version}/linux-$PKGMK_ARCH/xpi/$lang.xpi
+install -Dm644 $lang.xpi \
+$PKG/usr/lib/firefox/browser/extensions/langpack-$lang@firefox.mozilla.org.xpi
+rm $lang.xpi
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/${name}.hi${PKGMK_BUILDVER}any.$PKGMK_PACKAGE_EXT \
+usr/lib/firefox/browser/extensions/langpack-$lang@firefox.mozilla.org.xpi
+
+rm usr/lib/firefox/browser/extensions/langpack-$lang@firefox.mozilla.org.xpi
+}
+locale_hr()
+{
+pack_remove_locale hr
+}
+locale_hu()
+{
+pack_remove_locale hu
+}
+locale_is()
+{
+pack_remove_locale is
+}
+locale_it()
+{
+pack_remove_locale it
+}
+locale_ja()
+{
+pack_remove_locale ja
+}
+locale_ko()
+{
+pack_remove_locale ko
+}
+locale_lt()
+{
+pack_remove_locale lt
+}
+locale_lv()
+{
+pack_remove_locale lv
+}
+locale_nl()
+{
+pack_remove_locale nl
+}
+locale_nn()
+{
+for lang in nn-NO nb-NO
+do
+  wget  http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/${locale_version}/linux-$PKGMK_ARCH/xpi/$lang.xpi
+  install -Dm644 $lang.xpi \
+  $PKG/usr/lib/firefox/browser/extensions/langpack-$lang@firefox.mozilla.org.xpi
+  rm $lang.xpi
+done
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/${name}.nn${PKGMK_BUILDVER}any.$PKGMK_PACKAGE_EXT \
+usr/lib/firefox/browser/extensions/langpack-nn-NO@firefox.mozilla.org.xpi \
+usr/lib/firefox/browser/extensions/langpack-nb-NO@firefox.mozilla.org.xpi
+
+rm usr/lib/firefox/browser/extensions/langpack-nn-NO@firefox.mozilla.org.xpi
+rm usr/lib/firefox/browser/extensions/langpack-nb-NO@firefox.mozilla.org.xpi
+}
+locale_pl()
+{
+pack_remove_locale pl
+}
+locale_pt()
+{
+for lang in pt-PT pt-BR
+do
+  wget  http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/${locale_version}/linux-$PKGMK_ARCH/xpi/$lang.xpi
+  install -Dm644 $lang.xpi \
+  $PKG/usr/lib/firefox/browser/extensions/langpack-$lang@firefox.mozilla.org.xpi
+  rm $lang.xpi
+done
+
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/${name}.pt${PKGMK_BUILDVER}any.$PKGMK_PACKAGE_EXT \
+usr/lib/firefox/browser/extensions/langpack-pt-PT@firefox.mozilla.org.xpi \
+usr/lib/firefox/browser/extensions/langpack-pt-BR@firefox.mozilla.org.xpi
+
+rm usr/lib/firefox/browser/extensions/langpack-pt-BR@firefox.mozilla.org.xpi
+rm usr/lib/firefox/browser/extensions/langpack-pt-PT@firefox.mozilla.org.xpi
+}
+locale_ro()
+{
+pack_remove_locale ro
+}
+locale_ru()
+{
+pack_remove_locale ru
+}
+locale_sk()
+{
+pack_remove_locale sk
+}
+locale_sl()
+{
+pack_remove_locale sl
+}
+locale_sq()
+{
+pack_remove_locale sq
+}
+locale_sr()
+{
+pack_remove_locale sr
+}
+locale_sv()
+{
+lang=sv-SE
+wget  http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/${locale_version}/linux-$PKGMK_ARCH/xpi/$lang.xpi
+install -Dm644 $lang.xpi \
+$PKG/usr/lib/firefox/browser/extensions/langpack-$lang@firefox.mozilla.org.xpi
+rm $lang.xpi
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/${name}.sv${PKGMK_BUILDVER}any.$PKGMK_PACKAGE_EXT \
+usr/lib/firefox/browser/extensions/langpack-$lang@firefox.mozilla.org.xpi
+
+rm usr/lib/firefox/browser/extensions/langpack-$lang@firefox.mozilla.org.xpi
+}
+locale_th()
+{
+pack_remove_locale th
+}
+locale_tr()
+{
+pack_remove_locale tr
+}
+locale_uk()
+{
+pack_remove_locale uk
+}
+locale_vi()
+{
+pack_remove_locale vi
+}
+locale_zh()
+{
+for lang in zh-CN zh-TW
+do
+  wget http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/${locale_version}/linux-$PKGMK_ARCH/xpi/$lang.xpi
+  install -Dm644 $lang.xpi \
+  $PKG/usr/lib/firefox/browser/extensions/langpack-$lang@firefox.mozilla.org.xpi
+  rm $lang.xpi
+done
+cd $PKG
+bsdtar -cf \
+$PKGMK_PACKAGE_DIR/${name}.zh${PKGMK_BUILDVER}any.$PKGMK_PACKAGE_EXT \
+usr/lib/firefox/browser/extensions/langpack-zh-CN@firefox.mozilla.org.xpi \
+usr/lib/firefox/browser/extensions/langpack-zh-TW@firefox.mozilla.org.xpi
+
+rm usr/lib/firefox/browser/extensions/langpack-zh-CN@firefox.mozilla.org.xpi
+rm usr/lib/firefox/browser/extensions/langpack-zh-TW@firefox.mozilla.org.xpi
+}
