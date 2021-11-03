@@ -12,7 +12,7 @@ run=(startup-notification hunspell desktop-file-utils hicolor-icon-theme
      shared-mime-info)
 
 name=thunderbird
-version=91.2.1
+version=91.3.0
 
 locale_version=$version
 
@@ -21,7 +21,7 @@ source=(https://archive.mozilla.org/pub/thunderbird/releases/$version/source/$na
 
 pack_remove_locale() {
 
-wget  https://archive.mozilla.org/pub/thunderbird/releases/$version/linux-${PKGMK_ARCH}/xpi/${1}.xpi
+wget  https://archive.mozilla.org/pub/thunderbird/releases/$version/linux-x86_64/xpi/${1}.xpi
 install -Dm644 ${1}.xpi \
 $PKG/usr/lib/$name/extensions/langpack-${1}@$name.mozilla.org.xpi
 rm ${1}.xpi
@@ -157,7 +157,7 @@ locale_es()
 {
 for lang in es-AR es-ES
 do
-   wget  http://download.cdn.mozilla.net/pub/mozilla.org/$name/releases/$version/linux-$PKGMK_ARCH/xpi/$lang.xpi
+   wget  http://download.cdn.mozilla.net/pub/mozilla.org/$name/releases/$version/linux-x86_64/xpi/$lang.xpi
    install -Dm644 $lang.xpi \
    $PKG/usr/lib/$name/extensions/langpack-$lang@$name.mozilla.org.xpi
    rm $lang.xpi
@@ -195,7 +195,7 @@ pack_remove_locale fr
 locale_ga()
 {
 lang=ga-IE
-wget  http://download.cdn.mozilla.net/pub/mozilla.org/$name/releases/$version/linux-$PKGMK_ARCH/xpi/$lang.xpi
+wget  http://download.cdn.mozilla.net/pub/mozilla.org/$name/releases/$version/linux-x86_64/xpi/$lang.xpi
 install -Dm644 $lang.xpi \
 $PKG/usr/lib/$name/extensions/langpack-$lang@$name.mozilla.org.xpi
 rm $lang.xpi
@@ -245,7 +245,7 @@ pack_remove_locale nl
 locale_nn()
 {
 lang=nn-NO
-wget  http://download.cdn.mozilla.net/pub/mozilla.org/$name/releases/$version/linux-$PKGMK_ARCH/xpi/$lang.xpi
+wget  http://download.cdn.mozilla.net/pub/mozilla.org/$name/releases/$version/linux-x86_64/xpi/$lang.xpi
 install -Dm644 $lang.xpi \
 $PKG/usr/lib/$name/extensions/langpack-$lang@$name.mozilla.org.xpi
 rm $lang.xpi
@@ -264,7 +264,7 @@ locale_pt()
 {
 for lang in pt-PT pt-BR
 do
-  wget  http://download.cdn.mozilla.net/pub/mozilla.org/$name/releases/$version/linux-$PKGMK_ARCH/xpi/$lang.xpi
+  wget  http://download.cdn.mozilla.net/pub/mozilla.org/$name/releases/$version/linux-x86_64/xpi/$lang.xpi
   install -Dm644 $lang.xpi \
   $PKG/usr/lib/$name/extensions/langpack-$lang@$name.mozilla.org.xpi
   rm $lang.xpi
@@ -306,7 +306,7 @@ pack_remove_locale sr
 locale_sv()
 {
 lang=sv-SE
-wget  http://download.cdn.mozilla.net/pub/mozilla.org/$name/releases/$version/linux-$PKGMK_ARCH/xpi/$lang.xpi
+wget  http://download.cdn.mozilla.net/pub/mozilla.org/$name/releases/$version/linux-x86_64/xpi/$lang.xpi
 install -Dm644 $lang.xpi \
 $PKG/usr/lib/$name/extensions/langpack-$lang@$name.mozilla.org.xpi
 rm $lang.xpi
@@ -333,7 +333,7 @@ locale_zh()
 {
 for lang in zh-CN zh-TW
 do
-  wget  http://download.cdn.mozilla.net/pub/mozilla.org/$name/releases/$version/linux-$PKGMK_ARCH/xpi/$lang.xpi
+  wget  http://download.cdn.mozilla.net/pub/mozilla.org/$name/releases/$version/linux-x86_64/xpi/$lang.xpi
   install -Dm644 $lang.xpi \
   $PKG/usr/lib/$name/extensions/langpack-$lang@$name.mozilla.org.xpi
   rm $lang.xpi
