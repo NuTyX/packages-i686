@@ -3,7 +3,7 @@ url='https://github.com/open-source-parsers/jsoncpp'
 
 packager="tnut <tnut@nutyx.org>"
 
-makedepends=(meson ninja python)
+makedepends=(meson ninja)
 
 name=jsoncpp
 version=1.9.4
