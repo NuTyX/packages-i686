@@ -30,10 +30,6 @@ build() {
 
 cd ${_name}-${version}
 
-sed -i '/utility/a #include <limits>'     src/corelib/global/qglobal.h
-sed -i '/string/a #include <limits>'      src/corelib/global/qfloat16.h
-sed -i '/qbytearray/a #include <limits>'  src/corelib/text/qbytearraymatcher.h
-
 ./configure -prefix         /usr                        \
             -sysconfdir     /etc/xdg                    \
             -bindir         /usr/bin                    \
@@ -65,7 +61,6 @@ sed -i '/qbytearray/a #include <limits>'  src/corelib/text/qbytearraymatcher.h
             -system-sqlite      \
             -system-freetype    \
             -no-rpath
-
 make
 make INSTALL_ROOT=$PKG install
 
