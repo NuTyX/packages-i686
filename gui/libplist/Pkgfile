@@ -48,6 +48,6 @@ install -D -m644 $name-$version/cython/plist.pxd $PKG/usr/include/plist/cython/p
 # Obsolets libs
 rm $PKG/usr/lib/libplist++-2.0.la
 rm $PKG/usr/lib/libplist-2.0.la
-# rm $PKG/usr/lib/python2.7/site-packages/plist.la
-# rm $PKG/usr/lib/python3.9/site-packages/plist.la
+rm $PKG/usr/lib/python2.7/site-packages/plist.la
+rm $PKG/usr/lib/python3.9/site-packages/plist.la
 }
