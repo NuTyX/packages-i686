@@ -9,7 +9,7 @@ _name=pixman
 alias=(pixman)
 version=0.40.0
 
-makedepends=(python meson ninja libpng)
+makedepends=(meson ninja libpng)
 source=( https://www.cairographics.org/releases/${_name}-$version.tar.gz)
 
 prepare() {
