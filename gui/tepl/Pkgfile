@@ -4,7 +4,7 @@ url="https://wiki.gnome.org/Projects/Tepl"
 packager="tnut <tnut@nutyx.org>"
 contributors="Spiky"
 
-makedepends=(python meson ninja amtk gtksourceview4 uchardet
+makedepends=(meson ninja amtk gtksourceview4 uchardet
              gobject-introspection gtk-doc vala icu)
 
 name=tepl
