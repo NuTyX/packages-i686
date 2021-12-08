@@ -8,9 +8,9 @@ makedepends=(python python-six)
 run=(python)
 
 name=python-astroid
-version=2.8.4
+version=2.9.0
 
-source=(https://files.pythonhosted.org/packages/85/9a/cb3960a8e73373462d7ae2607df68d60684e1d4b18a6b79becd77ecac63f/astroid-$version.tar.gz)
+source=(https://files.pythonhosted.org/packages/ee/9b/b1d4515d1a969e96954d888df4e274d487c277812573ccbbb137109b066e/astroid-$version.tar.gz)
 
 build() {
     cd astroid-$version
