@@ -21,14 +21,9 @@ PKGMK_GROUPS=(devel)
 source=(https://sourceforge.net/projects/deadbeef/files/travis/linux/1.8.8/deadbeef-1.8.8.tar.bz2)
 
 build () {
-  cd $name-$version
-  export CC=clang CXX=clang++
-  ./configure --prefix=/usr \
-  --disable-ffmpeg \
-  --disable-notify \
-  --disable-lfm \
-  --enable-gtk3 \
-  --disable-soundtouch
+    cd $name-$version
+    export CC=clang CXX=clang++
+    ./configure --prefix=/usr --disable-ffmpeg --disable-notify --disable-lfm --enable-gtk3
   make 
   make DESTDIR=$PKG install
 }
