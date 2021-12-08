@@ -1,8 +1,8 @@
 description="Standalone web browser from mozilla.org"
 url="http://www.mozilla.com/firefox/"
 
-packager="tnut <tnut@nutyx.org>"
-contributors="Pierre,Remy,Fabienwang,Spiky"
+packager="spiky <spiky@nutyx.org>"
+contributors="Pierre,Remy,Fabienwang,Tnut"
 
 categories=(Network WebBrowser)
 
@@ -14,11 +14,11 @@ run=(pulseaudio icu sqlite libvpx nss gtk3 zip unzip
 
 
 name=firefox
-version=94.0.1
+version=94.0.2
 
 locale_version=$version
 
-source=(firefox.desktop disable_rust_test-1.patch fix-i386-fdlibm.patch
+source=(firefox.desktop
 	https://archive.mozilla.org/pub/firefox/releases/$version/source/$name-$version.source.tar.xz)
 
 pack_remove_locale() {
@@ -38,8 +38,11 @@ rm usr/lib/firefox/browser/extensions/langpack-${1}@firefox.mozilla.org.xpi
 
 build() {
 
-export CC=gcc
-export CXX=g++
+export AR=llvm-ar
+export NM=llvm-nm
+export RANLIB=llvm-ranlib
+export CC=clang
+export CXX=clang++
 
 cd $name-$version
 
@@ -138,15 +141,13 @@ unset MOZ_TELEMETRY_REPORTING
 
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/firefox-build-dir
 EOF
-
-patch -Np1 -i ../disable_rust_test-1.patch
-patch -Np1 -i ../fix-i386-fdlibm.patch
+sed -e 's/checkImpl/checkFFImpl/g' -i js/src/vm/JSContext*.h
 
 export MOZBUILD_STATE_PATH=${PWD}/mozbuild
 export MACH_USE_SYSTEM_PYTHON=1
 
-SHELL=/bin/sh ./mach configure
 SHELL=/bin/sh ./mach build
+SHELL=/bin/sh ./mach buildsymbols
 
 mkdir -pv $PKG/usr/{bin,lib{,/mozilla/plugins}}
 
