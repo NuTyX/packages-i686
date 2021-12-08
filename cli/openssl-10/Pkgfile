@@ -20,7 +20,7 @@ cd openssl-$version
 ./Configure --prefix=/usr \
 	--openssldir=/etc/ssl \
 	--libdir=lib/openssl-1.0 \
-	shared linux-elf
+	shared linux-x86_64
 
 make depend
 
