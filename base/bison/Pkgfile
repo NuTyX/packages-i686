@@ -2,7 +2,7 @@ description="The Bison package contains a parser generator"
 url="http://www.gnu.org/software/bison/"
 
 maintainer="Robert Corbett,Richard Stallman,Wilfred Hansen"
-packager="tnut <tnut@nutyx.org>"
+packager="spiky <spiky@nutyx.org>"
 
 makedepends=(m4)
 
