@@ -23,5 +23,6 @@ package() {
 rm $PKG/usr/lib/libunwind-coredump.la
 rm $PKG/usr/lib/libunwind-ptrace.la
 rm $PKG/usr/lib/libunwind-setjmp.la
+rm $PKG/usr/lib/libunwind-x86_64.la
 rm $PKG/usr/lib/libunwind.la
 }
