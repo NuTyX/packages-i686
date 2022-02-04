@@ -8,11 +8,11 @@ makedepends=(bison flex perl m4)
 run=(nutyx kmod busybox)
 
 name=kernel-419
-version=4.19.208
+version=4.19.227
 
 alias=(linux-4.19)
 INITRD="initrd-${name/*-/}"
-KERNEL=${name/-*}
+KERNEL=${name}
 
 _version=${version:0:4}
 
@@ -71,7 +71,7 @@ $PKG/boot/System.map-${KERNEL_VERSION}
 cp  .config    \
 $PKG/boot/config-${KERNEL_VERSION}
 cp  arch/i386/boot/bzImage \
-$PKG/boot/$KERNEL-${KERNEL_VERSION}
+$PKG/boot/$KERNEL
 
 # Reorgenise the sources
 cd $PKG/lib/modules/${KERNEL_VERSION}/
@@ -92,24 +92,10 @@ $SRC/linux-${_version}
 rm -rf $PKG/lib/firmware
 
 # post-install autogen
-echo 'LK="."
-[ -L boot/$name ] && LK="$(readlink boot/$name)"
-if [ "$(dirname $LK)" != "." ]; then
-  echo "This is a efi installation"
-  ln -sf $LK boot/$name
-  if [ -f boot/$LK ]; then' > $PKGMK_ROOT/$name.post-install
-echo "    mv boot/$KERNEL-${KERNEL_VERSION} boot/\$LK 2>/dev/null
-    ln -sf \$LK boot/$KERNEL-${KERNEL_VERSION}
-  else
-    echo \"EFI Partition not found, mount EFI Partition and re-install the kernel\"
-  fi
-else
-  echo \"This is a bios installation\"
-  if [ -L boot/initrd-419 ]; then
+echo "if [ -f boot/$INITRD ]; then
     mkinitramfs ${KERNEL_VERSION}
-    ln -sf initrd-${KERNEL_VERSION} boot/$INITRD
-  fi
-  ln -sf $KERNEL-${KERNEL_VERSION} boot/$name
+    rm boot/$INITRD
+    mv boot/ initrd-${KERNEL_VERSION} boot/$INITRD
 fi" >> $PKGMK_ROOT/$name.post-install
 
 }
