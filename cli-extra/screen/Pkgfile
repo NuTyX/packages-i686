@@ -1,22 +1,32 @@
 description="Runs several separate processes on a single physical character-based terminal."
 url="http://www.gnu.org/software/screen/screen.html"
-contributors="Pierre B, Greg"
-packager="tnut <tnut@nutyx.org>"
+
+contributors="Pierre,Greg,Tnut"
+packager="spiky <spiky@nutyx.org>"
+
+makedepends=(patch autoconf automake)
 
 name=screen
-version=4.8.0
+version=4.9.0
 
-source=(ftp://ftp.gnu.org/gnu/$name/$name-$version.tar.gz)
+source=(upstream_fixes-1.patch
+	https://ftp.gnu.org/gnu/$name/$name-$version.tar.gz)
+
+prepare() {
+  cd $name-$version
+  NOCONFIGURE=1 ./autogen.sh
+}
 
 build() {
 cd $name-$version
-./configure --prefix=/usr                     \
+
+./configure --prefix=/usr         \
 --infodir=/usr/share/info         \
 --mandir=/usr/share/man           \
 --with-socket-dir=/run/screen     \
 --with-pty-group=5                \
---with-sys-screenrc=/etc/screenrc &&
-sed -i -e "s%/usr/local/etc/screenrc%/etc/screenrc%" {etc,doc}/* &&
+--with-sys-screenrc=/etc/screenrc
+sed -i -e "s%/usr/local/etc/screenrc%/etc/screenrc%" {etc,doc}/*
 make
 make DESTDIR=$PKG install
 mkdir $PKG/etc
