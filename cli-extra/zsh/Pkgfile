@@ -4,7 +4,7 @@ url="http://www.zsh.org"
 contributors="Alienus, Fanch, Greg"
 packager="tnut <tnut@nutyx.org>"
 
-makedepends=(pcre)
+makedepends=(gawk ncurses pcre texinfo)
 
 name=zsh
 version=5.8
