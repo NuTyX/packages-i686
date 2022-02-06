@@ -2,12 +2,12 @@ description="Netfilter nftables userspace tools"
 url="http://netfilter.org/projects/nftables/"
 
 contributors="Alienus, Fanch, Greg"
-packager="tnut <tnut@nutyx.org>"
+packager="spiky <spiky@nutyx.org>"
 
-makedepends=(docbook2x asciidoc libmnl libnftnl jansson)
+makedepends=(gmp readline docbook2x asciidoc libmnl  libnftnl jansson)
 
 name=nftables
-version=0.9.2
+version=1.0.1
 
 source=($url/files/nftables-$version.tar.bz2
         nftables.conf)
@@ -18,7 +18,8 @@ cd $name-$version
 ./configure --prefix=/usr \
 	--sysconfdir=/etc/nftables \
 	--mandir=/usr/share/man \
-        --with-json
+        --with-json \
+        --with-cli=readline
 make
 make DESTDIR=$PKG install
 install -Dm644 ../nftables.conf "$PKG/etc/nftables/nftables.conf"
