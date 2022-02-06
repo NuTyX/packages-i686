@@ -1,0 +1,26 @@
+description="IRC client in curses UI. Light and extensible"
+url="https://www.weechat.org"
+
+packager="spiky <spiky@nutyx.org>"
+contributors=", fabienwang"
+
+makedepends=(ruby asciidoctor cmake aspell guile gnutls libgcrypt openssl lua perl python tcl)
+run=(gnutls libgcrypt openssl)
+set=()
+
+name=weechat
+version=3.4
+
+source=(https://www.weechat.org/files/src/${name}-${version}.tar.xz)
+
+build() {
+cd $name-$version
+cmake -Wno-dev . \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DENABLE_MAN=ON \
+      -DENABLE_DOC=ON \
+      -DENABLE_JAVASCRIPT=OFF \
+      -DENABLE_PHP=OFF
+make
+make DESTDIR=$PKG install
+}
