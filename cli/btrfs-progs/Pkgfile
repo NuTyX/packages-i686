@@ -1,14 +1,13 @@
 description="Btrfs filesystem utilities"
 url="http://btrfs.wiki.kernel.org/"
 
-contributors="Alienus"
-packager="tnut <tnut@tnut@nutyx.org>"
+contributors="Alienus, spiky"
+packager="spiky <spiky@nutyx.org>"
 
 makedepends=(e2fsprogs lzo util-linux zlib)
 
 name=btrfs-progs
-version=5.7
-release=2
+version=5.16.1
 
 source=(https://www.kernel.org/pub/linux/kernel/people/kdave/$name/$name-v$version.tar.xz)
 
