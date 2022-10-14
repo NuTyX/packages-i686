@@ -8,9 +8,9 @@ makedepends=(cards doxygen xorgproto fltk xorg-libx11 xorg-libxext
              xorg-libxfixes xorg-libxft xorg-libxinerama mesa)
 
 name=flcards
-version=2.5.0
+version=2.6.1
 
-[ "$release" != "1" ] &&  patchname="flcards-$version-consolidate-$release.patch"
+# [ "$release" != "1" ] &&  patchname="flcards-$version-consolidate-$release.patch"
 
 source=(https://downloads.tuxfamily.org/nutyx/files/cards-$version.tar.gz)
 
@@ -25,6 +25,4 @@ make flcards
 cd fltk
 make DESTDIR=$PKG install
 
-cd ../documentation
-make DESTDIR=$PKG html install
 }
