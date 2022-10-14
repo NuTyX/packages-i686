@@ -1,13 +1,13 @@
 description="GNU compiler collection, which includes the C, C++, fortran and objc compilers."
 url="http://gcc.gnu.org"
 
-packager="fabienwang <fabienwang@nutyx.org>"
-contributors="Pierre B, Tnut"
+packager="Spiky <spiky@nutyx.org>"
+contributors="Pierre,Fabien,Tnut"
 maintainer="Jakub Jelinek (jakub at redhat dot com),Manuel López-Ibáñez (manu at gcc dot gnu.org,Giovanni Bajo,Peter Barada,Gerald Baumgartner and a lot more."
 
-makedepends=(gmp mpfr mpc tar)
+makedepends=(gmp mpfr mpc tar flex)
 name=gcc
-version=11.2.0
+version=12.2.0
 
 PKGMK_KEEP_LA_LIBS="yes"
 PKGMK_IGNORE_UNPACK="yes"
@@ -20,8 +20,10 @@ tar -xf $name-$version.tar.xz
 
 build()
 {
+
 cd gcc-$version
 
+sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
 case $(uname -m) in
   x86_64)
     sed -i.orig '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
@@ -33,7 +35,7 @@ cd       build
 
 ../configure --prefix=/usr \
     --libdir=/usr/lib \
-    --enable-languages=c,c++,d,fortran,go,objc,obj-c++ \
+    --enable-languages=c,c++,d,fortran,objc,obj-c++ \
     --disable-multilib \
     --disable-bootstrap \
     --with-system-zlib
