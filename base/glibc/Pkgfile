@@ -7,7 +7,7 @@ kernelversion=5.16
 makedepends=(python bison grep)
 
 name=glibc
-version=2.35
+version=2.36
 
 PKGMK_LOCALES=()
 source=(https://www.kernel.org/pub/linux/kernel/v5.x/linux-$kernelversion.tar.xz
