@@ -8,7 +8,7 @@ makedepends=(bison flex perl m4)
 run=(nutyx kmod busybox)
 
 name=kernel-419
-version=4.19.297
+version=4.19.299
 
 alias=(linux-4.19)
 INITRD="initrd-${name/*-/}"
