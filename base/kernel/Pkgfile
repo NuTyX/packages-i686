@@ -1,36 +1,34 @@
-url="https://www.kernel.org"
-description="The latest stable kernel version"
+url="http://www.kernel.org"
+description="The 4.19 longterm support Linux Kernel version."
 
 packager="tnut <tnut@nutyx.org>"
+contributors="Pierre B"
 
-makedepends=(diffutils bison flex perl gmp mpc mpfr libelf)
+makedepends=(bison flex perl m4)
 run=(nutyx kmod busybox)
 
-PKGMK_IGNORE_UNPACK="yes"
-PKGMK_NO_STRIP="yes"
-PKGMK_GROUPS=(devel doc)
-
 name=kernel
-version=6.0.9
+version=4.19.301
 
 alias=(linux)
 INITRD="initrd-stable"
 KERNEL="kernel-stable"
 
-_version=${version:0:3}
+_version=${version:0:4}
 
-# Linux patch version
-[ "${_version}" != "${version}" ] && patchname="patch-$version.xz"
+PKGMK_IGNORE_UNPACK="yes"
+PKGMK_NO_STRIP="yes"
+PKGMK_GROUPS=(devel doc)
 
 ## Download all the sources
 #
+source=(\
+$url/pub/linux/kernel/v4.x/linux-${_version}.tar.xz
+$url/pub/linux/kernel/v4.x/patch-$version.xz
+config)
 
-source=($url/pub/linux/kernel/v6.x/linux-${_version}.tar.xz config)
-
-[ -z $patchname ] || source+=" $url/pub/linux/kernel/v6.x/$patchname"
 ## Time to build everything
 #
-
 build(){
 
 bsdtar -p -o -C $SRC -xf linux-${_version}.tar.xz
@@ -58,6 +56,8 @@ make INSTALL_MOD_PATH=$PKG modules_install
 
 KERNEL_VERSION="$(basename $PKG/lib/modules/*)"
 
+cd $SRC
+
 # depmod needed
 depmod -b $PKG -a ${KERNEL_VERSION}
 
@@ -72,7 +72,6 @@ cp  .config    \
 $PKG/boot/config-${KERNEL_VERSION}
 cp  arch/i386/boot/bzImage \
 $PKG/boot/$KERNEL
-ln -sv $KERNEL $PKG/boot/${name}
 
 # Reorgenise the sources
 cd $PKG/lib/modules/${KERNEL_VERSION}/
@@ -82,8 +81,8 @@ mkdir -p $PKG/usr/src
 mv $SRC/linux-${_version} $PKG/usr/src/
 rm {build,source}
 
-ln -sv /usr/src/linux-${_version} build
-ln -sv /usr/src/linux-${_version} source
+ln -sv ../../../usr/src/linux-${_version} build
+ln -sv ../../../usr/src/linux-${_version} source
 
 mkdir $SRC/linux-${_version}
 mv $PKG/usr/src/linux-${_version}/Documentation \
@@ -96,14 +95,14 @@ rm -rf $PKG/lib/firmware
 echo "if [ -f boot/$INITRD ]; then
     mkinitramfs ${KERNEL_VERSION}
     rm boot/$INITRD
-    mv boot/initrd-${KERNEL_VERSION} boot/$INITRD
-fi" > $PKGMK_ROOT/$name.post-install
+    mv boot/ initrd-${KERNEL_VERSION} boot/$INITRD
+fi" >> $PKGMK_ROOT/$name.post-install
 
 }
 devel() {
 
 cd $PKG
-rm -r usr/src/linux-${_version}/{tools,ipc,init,drivers,fs,mm,samples,security,sound,virt}
+rm -r usr/src/linux-${_version}/{tools,ipc,init,drivers,firmware,fs,mm,samples,security,sound,virt}
 for i in alpha arc arm arm26 arm64 avr32 blackfin c6x \
 cris frv h8300 hexagon ia64 m32r m68k m68knommu metag \
 mips microblaze mn10300 openrisc parisc powerpc ppc s390 \
