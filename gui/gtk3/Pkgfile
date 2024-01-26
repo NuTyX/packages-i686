@@ -26,7 +26,7 @@ meson setup --prefix=/usr \
 -Dcolord=yes              \
 -Dgtk_doc=true            \
 -Dman=true                \
--Dinstrospection=true     \
+-Dintrospection=true     \
 ../gtk+-$version
 
 ninja
